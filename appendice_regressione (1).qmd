@@ -1,0 +1,811 @@
+---
+title: ""
+author: "Giorgio Arcara"
+date: ""
+format:
+  beamer:
+    theme: metropolis
+    keep-tex: true
+    pdf-engine: xelatex
+incremental: false
+header-includes: |
+  \setbeamerfont{title}{size=\large}
+  \usepackage{hyperref}
+  \setbeamertemplate{footline}[frame number]
+  \usepackage{tikz}
+  \usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, backgrounds, calc}
+  \usepackage{booktabs}
+  \usepackage{xcolor}
+  \usepackage{array}
+  \usepackage{colortbl}
+  \definecolor{mblue}{RGB}{35,55,100}
+  \definecolor{mred}{RGB}{160,30,30}
+  \definecolor{mgreen}{RGB}{30,100,60}
+---
+
+::: {.content-visible when-format="beamer"}
+```{=latex}
+\title{Metodologia della Ricerca Clinica\\
+\vspace{0.5em}
+{\normalsize \textbf{APPENDICE --- Regressione Lineare e Logistica}}}
+\author{Giorgio Arcara,\\ Università di Padova \\ IRCCS San Camillo, Venezia}
+\titlegraphic{
+\vspace*{7cm}
+\includegraphics[scale=0.15]{Figures/LogoSanCamilloIRCCS_Unipd_alpha.png}
+\hfill \includegraphics[scale=0.15]{Figures/CC_license_3_0.png}
+}
+\maketitle
+```
+:::
+
+# Introduzione ai Modelli di Regressione
+
+## Perché la Regressione?
+
+\small
+
+La regressione è lo strumento statistico più usato nella ricerca clinica per:
+
+\begin{itemize}\footnotesize
+\item Descrivere la relazione tra una variabile dipendente e uno o più predittori
+\item Controllare statisticamente per variabili confondenti
+\item Predire un outcome a partire da un insieme di variabili
+\item Quantificare la dimensione dell'effetto di un predittore \emph{tenendo costanti gli altri}
+\end{itemize}
+
+\vspace{0.4em}
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw,rounded corners,fill=mblue!15,text width=3.2cm,
+              align=center,font=\footnotesize,minimum height=0.9cm},
+  arr/.style={-{Stealth},mblue,thick}
+]
+\node[box] (x1) at (-3.5,0) {Predittori\\$X_1, X_2, \ldots, X_p$};
+\node[box] (mod) at (0,0)   {Modello di\\Regressione};
+\node[box] (y)  at (3.5,0)  {Variabile\\dipendente $Y$};
+\draw[arr] (x1)--(mod); \draw[arr] (mod)--(y);
+\end{tikzpicture}
+\end{center}
+```
+
+\vspace{0.3em}
+\small Due domande distinte: \textbf{(1) spiegazione} --- quali predittori sono associati a $Y$ e di quanto? \textbf{(2) predizione} --- quanto accuratamente posso stimare $Y$ per un nuovo soggetto?
+
+## Regressione Lineare vs Logistica: Quando Usarle
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw,rounded corners,fill=mblue!15,text width=4.2cm,
+              align=center,font=\footnotesize,minimum height=1.3cm},
+]
+\node[box] (lin) at (-2.8,0) {
+  \textbf{Regressione Lineare}\\[4pt]
+  \footnotesize $Y$ continua\\
+  Es.\ score MMSE, volume ippocampale,\\
+  punteggio su scala di depressione
+};
+\node[box] (log) at (2.8,0) {
+  \textbf{Regressione Logistica}\\[4pt]
+  \footnotesize $Y$ binaria (0/1)\\
+  Es.\ diagnosi MCI sì/no,\\
+  conversione AD sì/no,\\
+  risposta al trattamento sì/no
+};
+\node[font=\normalsize\bfseries,mblue] at (0,0) {vs};
+\end{tikzpicture}
+\end{center}
+\vspace{0.4em}
+\small \textbf{Nota}: esistono estensioni per outcome ordinali (regressione ordinale), conteggi (Poisson), tempi all'evento (Cox) --- ma lineare e logistica coprono la maggioranza delle situazioni in neuropsicologia.
+```
+
+# Regressione Lineare
+
+## Il Modello
+
+\small
+
+$$Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \ldots + \beta_p X_{pi} + \varepsilon_i$$
+
+dove $\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$ (errori i.i.d., distribuzione normale).
+
+\vspace{0.4em}
+
+**Interpretazione dei coefficienti** $\beta_j$:
+
+\begin{itemize}\footnotesize
+\item $\beta_0$: valore atteso di $Y$ quando tutti i predittori = 0 (intercetta)
+\item $\beta_j$: variazione attesa di $Y$ per un incremento unitario di $X_j$,\\ \textbf{tenendo costanti tutti gli altri predittori}
+\end{itemize}
+
+\vspace{0.4em}
+
+**Stima**: minimi quadrati ordinari (OLS) --- minimizza $\sum_i (Y_i - \hat{Y}_i)^2$.
+
+\vspace{0.4em}
+
+**Misure di fit**:
+\begin{itemize}\footnotesize
+\item $R^2$: proporzione di varianza di $Y$ spiegata dal modello
+\item $R^2$ aggiustato: penalizza per il numero di predittori
+\item RMSE (Root Mean Squared Error): errore medio in unità di $Y$
+\end{itemize}
+
+<!--
+## Visualizzazione: Regressione Semplice
+
+```{=latex}
+% [IMMAGINE SUGGERITA: scatterplot con retta di regressione e bande di confidenza,
+%  es. età vs score MMSE in pazienti MCI]
+\begin{center}
+\begin{tikzpicture}[scale=0.88]
+  \draw[thick,->] (0,0) -- (6.5,0) node[right,font=\small]{Età (anni)};
+  \draw[thick,->] (0,0) -- (0,4.5) node[above,font=\small]{MMSE};
+
+  % Axis labels
+  \foreach \x/\lbl in {1/60, 2/65, 3/70, 4/75, 5/80}
+    \node[below,font=\tiny] at (\x*1.1,-0.15) {\lbl};
+  \foreach \y/\lbl in {0.5/20, 1.5/22, 2.5/24, 3.5/26, 4.2/28}
+    \node[left,font=\tiny] at (-0.1,\y) {\lbl};
+
+  % Confidence band
+  \fill[mblue!10] plot[smooth] coordinates
+    {(1.1,3.8)(2.2,3.3)(3.3,2.7)(4.4,2.1)(5.5,1.5)} --
+    plot[smooth,reverse path] coordinates
+    {(1.1,3.2)(2.2,2.8)(3.3,2.3)(4.4,1.7)(5.5,1.1)};
+
+  % Regression line
+  \draw[thick,mblue] (1.1,3.5) -- (5.5,1.3);
+
+  % Data points
+  \foreach \x/\y in {
+    1.2/3.7, 1.4/3.4, 1.8/3.6, 2.0/3.1, 2.3/2.9, 2.5/3.3,
+    2.8/2.7, 3.1/2.5, 3.3/2.8, 3.6/2.2, 3.9/2.0, 4.1/2.4,
+    4.3/1.9, 4.6/1.6, 4.8/2.0, 5.0/1.4, 5.3/1.2, 5.5/1.5
+  }{
+    \fill[mblue!70] (\x,\y) circle (2.2pt);
+  }
+
+  % Residual example
+  \draw[mred,dashed] (3.1,2.5) -- (3.1,2.1);
+  \node[right,font=\tiny,mred] at (3.15,2.3) {$\varepsilon_i$};
+
+  \node[font=\footnotesize,mblue] at (4.5,3.8)
+    {$\hat{Y} = 5.2 - 0.05 \cdot \text{Età}$};
+\end{tikzpicture}
+\end{center}
+\vspace{-0.4em}
+\small Ogni punto è un paziente MCI. La retta è la stima OLS. Le bande grigie sono il 95\% CI della retta. I residui $\varepsilon_i$ sono le distanze verticali tra punti e retta.
+```
+
+-->
+## Output di una Regressione Lineare (come appare in un articolo)
+
+```{=latex}
+\vspace{-0.2em}
+\begin{center}
+\small
+\textbf{Tabella 1.} Predittori dello score MMSE in pazienti con MCI ($N = 120$)
+\vspace{0.4em}
+
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Predittore} & $\boldsymbol{\hat{\beta}}$ & \textbf{SE} & \textbf{95\% CI} & $\boldsymbol{p}$ \\
+\midrule
+Intercetta           & 34.21 & 2.18 & [29.90, 38.52] & $<.001$ \\
+\rowcolor{mblue!8}
+Età (anni)           & $-0.18$ & 0.04 & [$-0.26$, $-0.10$] & $<.001$ \\
+Scolarità (anni)     & $+0.31$ & 0.07 & [$+0.17$, $+0.45$] & $<.001$ \\
+\rowcolor{mblue!8}
+Depressione (GDS)    & $-0.22$ & 0.09 & [$-0.40$, $-0.04$] & $.018$  \\
+Sesso (F vs M)       & $-0.41$ & 0.48 & [$-1.36$, $+0.54$] & $.393$  \\
+\midrule
+\multicolumn{5}{l}{\footnotesize $R^2 = .38$; \; $R^2_{\text{adj}} = .36$; \; $F(4, 115) = 17.6$, $p < .001$} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.2em}
+\footnotesize
+\textbf{Lettura}: Ogni anno in più di età è associato a un punteggio MMSE inferiore di 0.18 punti ($p < .001$), tenendo costanti scolarità, depressione e sesso. Il sesso non è un predittore significativo in questo modello ($p = .393$).
+```
+
+## Come Leggere i Coefficienti (Regressione Lineare)
+
+\small
+
+**Predittore continuo** (es.\ scolarità):
+
+$\hat{\beta} = +0.31$ significa: per ogni anno aggiuntivo di scolarità, il punteggio MMSE aumenta di 0.31 punti \emph{in media}, tenendo costanti gli altri predittori.
+
+\vspace{0.4em}
+
+**Predittore categoriale binario** (es.\ sesso F vs M):
+
+$\hat{\beta} = -0.41$ significa: le donne hanno un punteggio MMSE mediamente inferiore di 0.41 punti rispetto agli uomini, tenendo costanti gli altri predittori. (Non significativo: $p = .393$.)
+
+\vspace{0.4em}
+
+**Intervallo di confidenza al 95\%**: l'intervallo che, se ripetessimo lo studio infinite volte, conterrebbe il vero parametro nel 95\% dei casi. Se l'IC \textbf{non include lo zero} $\Rightarrow$ significativo a $\alpha = 0.05$.
+
+\vspace{0.4em}
+
+\textbf{Attenzione alle unità}: $\hat{\beta}$ dipende dalle unità di misura del predittore. Per confrontare l'importanza relativa di predittori con scale diverse, usare i \textbf{coefficienti standardizzati} ($\beta^*$).
+
+# Regressione Logistica
+
+## Il Problema con una Variabile Dipendente Binaria
+<!--
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[scale=0.88]
+  \draw[thick,->] (0,-0.3) -- (6.5,-0.3) node[right,font=\small]{MMSE};
+  \draw[thick,->] (0,-0.3) -- (0,3.8) node[above,font=\small]{Conversione AD (0/1)};
+  \node[left,font=\tiny] at (-0.1,-0.3) {0};
+  \node[left,font=\tiny] at (-0.1,3.3) {1};
+  \draw[dashed,gray!50] (0,3.3) -- (6.2,3.3);
+
+  % Data points at 0 and 1
+  \foreach \x in {1.0,1.5,2.0,2.3,2.8,3.2}
+    \fill[mred!70] (\x,3.3) circle (2.5pt);
+  \foreach \x in {3.5,4.0,4.5,5.0,5.5,6.0}
+    \fill[mblue!70] (\x,-0.3) circle (2.5pt);
+  \foreach \x in {2.5,3.0,3.8,4.2}
+    \fill[mblue!40] (\x,3.3) circle (2.5pt);
+  \foreach \x in {1.8,2.2,3.3}
+    \fill[mred!40] (\x,-0.3) circle (2.5pt);
+
+  % Linear fit (bad)
+  \draw[mred,thick,dashed] (0.5,3.8) -- (6.2,-0.5);
+  \node[right,font=\tiny,mred] at (5.5,0.5) {Lineare: valori $>1$ e $<0$!};
+
+  % Logistic curve (good)
+  \draw[mblue,very thick] plot[smooth,domain=0.3:6.2,samples=60]
+    (\x, {3.3/(1+exp(3*(\x-3.2)))});
+  \node[right,font=\tiny,mblue, align=center] at (4.5,2.3) {Logistica:\\sempre in $[0,1]$};
+\end{tikzpicture}
+\end{center>
+\vspace{-0.4em}
+\small La regressione lineare su $Y \in \{0,1\}$ può predire probabilità $<0$ o $>1$. La \textbf{regressione logistica} modella direttamente la probabilità dell'evento mantenendola in $[0,1]$.
+```
+-->
+
+## Il Modello Logistico
+
+\small
+
+$$\log\left(\frac{p_i}{1-p_i}\right) = \beta_0 + \beta_1 X_{1i} + \ldots + \beta_p X_{pi}$$
+
+Il termine a sinistra è il **logit** (log-odds): il logaritmo del rapporto tra la probabilità dell'evento e quella del non-evento.
+
+\vspace{0.3em}
+
+Invertendo:
+$$p_i = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X_{1i} + \ldots)}}$$
+
+\vspace{0.3em}
+
+**Stima**: massima verosimiglianza (ML), non minimi quadrati.
+
+\vspace{0.3em}
+
+**Misure di fit**:
+\begin{itemize}\footnotesize
+\item Log-likelihood, AIC, BIC (più bassi = meglio)
+\item $R^2$ di Nagelkerke, McFadden (pseudo-$R^2$, non identici al $R^2$ lineare)
+\item Hosmer-Lemeshow test (calibrazione)
+\item AUC-ROC (discriminazione)
+\end{itemize}
+
+## L'Odds Ratio: Intuizione
+
+\small
+
+Il coefficiente $\hat{\beta}_j$ della logistica non si interpreta direttamente come in quella lineare. Si usa l'\textbf{Odds Ratio} (OR):
+
+$$OR_j = e^{\hat{\beta}_j}$$
+
+\vspace{0.3em}
+
+**Cos'è l'odds?**
+
+$$\text{odds} = \frac{p}{1-p}$$
+
+Se la probabilità di conversione ad AD è 0.25, l'odds è $0.25/0.75 = 0.33$ (1 conversione ogni 3 non-conversioni).
+
+\vspace{0.4em}
+
+**Cos'è l'Odds Ratio?**
+
+È il \emph{rapporto} tra gli odds in due condizioni: trattato vs non trattato, o per un incremento unitario di $X$.
+
+$$OR = \frac{\text{odds}(\text{esposto})}{\text{odds}(\text{non esposto})}$$
+
+
+## L'Odds Ratio: Interpretazione Pratica
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[scale=0.85,
+  arr/.style={-{Stealth},mblue,thick}
+]
+  \draw[thick,->] (0,0) -- (7,0);
+  \draw[thick] (3.5,0.15)--(3.5,-0.15);
+  \node[below,font=\small] at (3.5,-0.2) {OR = 1};
+  \node[below,font=\footnotesize,mred] at (1.2,-0.2) {OR $<$ 1};
+  \node[below,font=\footnotesize,mgreen] at (5.8,-0.2) {OR $>$ 1};
+  \node[above,font=\footnotesize,mred] at (1.2,0.3) {fattore protettivo};
+  \node[above,font=\footnotesize,gray] at (3.5,0.3) {nessun effetto};
+  \node[above,font=\footnotesize,mgreen] at (5.8,0.3) {fattore di rischio};
+
+  % Example OR markers
+  \fill[mred]   (1.5,0) circle (4pt) node[above,font=\tiny,yshift=4pt]{OR=0.4};
+  \fill[gray]   (3.5,0) circle (3pt);
+  \fill[mgreen] (5.2,0) circle (4pt) node[above,font=\tiny,yshift=4pt]{OR=2.5};
+\end{tikzpicture}
+\end{center}
+\vspace{0.2em}
+```
+
+| OR | Interpretazione |
+|--|--|
+| \footnotesize $OR = 1$ | \footnotesize Nessuna associazione |
+| \footnotesize $OR = 2.5$ | \footnotesize Gli esposti hanno odds di evento 2.5 volte quelle dei non esposti |
+| \footnotesize $OR = 0.4$ | \footnotesize Gli esposti hanno odds di evento il 60\% \emph{inferiori} rispetto ai non esposti |
+
+\vspace{0.2em}
+\footnotesize \textbf{Attenzione}: OR $\neq$ Rischio Relativo (RR). L'OR sovrastima il RR quando la prevalenza dell'outcome è alta ($>10\%$). Per prevalenze basse, OR $\approx$ RR.
+
+## Odds Ratio: Esempio Numerico
+
+\small
+
+Studio su 200 pazienti MCI: 50 convertono ad AD entro 2 anni.
+
+\vspace{0.4em}
+
+```{=latex}
+\begin{center}
+\begin{tabular}{lcc>{\bfseries}c}
+\toprule
+ & \textbf{Converti} & \textbf{Non converti} & \textbf{Totale} \\
+\midrule
+APOE $\varepsilon4$ portatori     & 35 & 65 & 100 \\
+APOE $\varepsilon4$ non portatori & 15 & 85 & 100 \\
+\midrule
+\textbf{Totale}                   & 50 & 150 & 200 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.4em}
+```
+
+**Odds nei portatori**: $35/65 = 0.538$
+
+**Odds nei non portatori**: $15/85 = 0.176$
+
+$$OR = \frac{0.538}{0.176} = \mathbf{3.06}$$
+
+\small I portatori di APOE $\varepsilon4$ hanno odds di conversione \textbf{3 volte superiori} rispetto ai non portatori.
+
+**Rischio Relativo**: $(35/100) / (15/100) = 2.33$ --- l'OR sovrastima perché la prevalenza (25\%) non è bassa.
+
+## Output di una Regressione Logistica (come appare in un articolo)
+
+```{=latex}
+\vspace{-0.2em}
+\begin{center}
+\small
+\textbf{Tabella 2.} Predittori di conversione MCI $\to$ AD a 2 anni ($N = 200$; eventi = 50)
+\vspace{0.4em}
+
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Predittore} & $\boldsymbol{\hat{\beta}}$ & \textbf{OR} & \textbf{95\% CI (OR)} & $\boldsymbol{p}$ \\
+\midrule
+Intercetta            & $-3.41$ & ---  & ---              & $<.001$ \\
+\rowcolor{mblue!8}
+Età (anni)            & $+0.09$ & 1.09 & [1.03, 1.16]     & $.004$  \\
+MMSE baseline         & $-0.21$ & 0.81 & [0.72, 0.91]     & $<.001$ \\
+\rowcolor{mblue!8}
+APOE $\varepsilon4$   & $+1.12$ & 3.06 & [1.54, 6.08]     & $.001$  \\
+Volume ippocampale    & $-0.44$ & 0.64 & [0.45, 0.91]     & $.013$  \\
+Scolarità (anni)      & $-0.08$ & 0.92 & [0.81, 1.05]     & $.224$  \\
+\midrule
+\multicolumn{5}{l}{\footnotesize $R^2_{\text{Nagelkerke}} = .41$;\; AUC = .83;\; HL $\chi^2(8) = 6.2$, $p = .62$} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.2em}
+\footnotesize
+\textbf{Lettura}: Ogni punto in meno al MMSE baseline è associato a odds di conversione $1/0.81 = 1.23$ volte maggiori (OR = 0.81 significa che \emph{un punto in più} è protettivo). APOE $\varepsilon4$ triplica le odds di conversione (OR = 3.06). La scolarità non è significativa ($p = .224$).
+```
+
+
+## Come Leggere un OR dalla Tabella
+
+\small
+
+**OR > 1** (es.\ APOE $\varepsilon4$, OR = 3.06):
+Ogni unità di aumento del predittore aumenta le odds dell'outcome di un fattore 3.06.
+\emph{"I portatori di APOE $\varepsilon4$ hanno odds di conversione circa tre volte superiori a quelle dei non portatori (OR = 3.06; 95\% CI [1.54, 6.08])"}
+
+\vspace{0.4em}
+
+**OR < 1** (es.\ MMSE, OR = 0.81):
+Ogni unità di aumento del predittore riduce le odds dell'outcome.
+\emph{"Un punto in più al MMSE baseline è associato a odds di conversione inferiori del 19\% (OR = 0.81; 95\% CI [0.72, 0.91])"}
+
+\vspace{0.4em}
+
+**IC 95\% che non include 1**: significativo a $\alpha = 0.05$.
+
+\vspace{0.4em}
+
+\textbf{Nota pratica}: nella regressione logistica, l'\textbf{intercetta non va interpretata} come nel modello lineare. Rappresenta il log-odds dell'outcome quando tutti i predittori sono zero (spesso non ha senso clinico).
+
+## OR vs RR vs Differenza di Rischio: Quando Usarli
+
+\small
+
+| Misura | Formula | Quando usarla |
+|--|--|--|
+| \footnotesize OR | \footnotesize $\frac{p_1/(1-p_1)}{p_0/(1-p_0)}$ | \footnotesize Studi caso-controllo; modelli logistici; outcome rari |
+| \footnotesize RR | \footnotesize $p_1 / p_0$ | \footnotesize RCT e studi di coorte; outcome con prevalenza $>10\%$ |
+| \footnotesize RD | \footnotesize $p_1 - p_0$ | \footnotesize Comunicazione del rischio assoluto al paziente |
+| \footnotesize NNT | \footnotesize $1/(p_1 - p_0)$ | \footnotesize Impatto clinico di un trattamento |
+
+\vspace{0.3em}
+\small \textbf{Esempio}: OR = 3.06, ma se la prevalenza è 10\%, RR $\approx$ 2.5 e RD $= 0.15$ (15 casi in più ogni 100 esposti). Comunicare l'OR al paziente può far sembrare l'effetto più grande di quanto sia.
+
+\vspace{0.2em}
+\tiny Cummings (2009). The fallacy of the OR in clinical research. \emph{Am J Epidemiol} 171(6). Open Access: \url{https://doi.org/10.1093/aje/kwp440}
+
+# Model Selection
+
+
+## Il Problema della Selezione dei Predittori
+
+\small
+
+Con molti predittori potenziali, come scegliere quali includere nel modello finale?
+
+\vspace{0.3em}
+
+**Trade-off fondamentale**:
+\begin{itemize}\footnotesize
+\item Troppo pochi predittori $\Rightarrow$ \emph{underfitting}: modello impreciso
+\item Troppi predittori $\Rightarrow$ \emph{overfitting}: buono sui dati usati, non generalizza
+\end{itemize}
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[scale=0.82]
+  \draw[thick,->] (0,0) -- (6,0) node[right,font=\small]{Complessità del modello};
+  \draw[thick,->] (0,0) -- (0,3.5) node[above,font=\small]{Errore};
+  % Training error
+  \draw[thick,mblue!50] plot[smooth]
+    coordinates {(0.5,2.8)(1.5,1.8)(2.5,1.2)(3.5,0.8)(4.5,0.5)(5.5,0.3)};
+  \node[right,font=\tiny,mblue!70] at (5.0,0.2) {Training};
+  % Validation error
+  \draw[thick,mblue] plot[smooth]
+    coordinates {(0.5,2.8)(1.5,1.6)(2.5,1.1)(3.0,1.0)(3.5,1.1)(4.5,1.6)(5.5,2.5)};
+  \node[right,font=\tiny,mblue] at (4.8,2.2) {Validation};
+  % Optimal
+  \draw[dashed,mred] (3.0,0) -- (3.0,3.2)
+    node[above,font=\tiny,mred]{Ottimo};
+  \node[below,font=\tiny,mred] at (3.0,-0.15) {$p^*$};
+\end{tikzpicture}
+\end{center}
+```
+
+
+## Metodi di Selezione dei Predittori
+
+\small
+
+**Stepwise (forward, backward, entrambe)**
+
+\begin{itemize}\footnotesize
+\item \emph{Forward}: si parte da nessun predittore, si aggiunge uno alla volta il più significativo
+\item \emph{Backward}: si parte da tutti, si rimuove il meno significativo
+\item \emph{Stepwise}: combinazione forward + backward
+\end{itemize}
+
+\vspace{0.3em}
+
+**Selezione basata su criteri di informazione**
+
+\begin{itemize}\footnotesize
+\item \textbf{AIC} (Akaike): penalizza per il numero di parametri; favorisce modelli predittivi
+\item \textbf{BIC} (Bayesian): penalizza più severamente; tende a modelli più parsimoniosi
+\end{itemize}
+
+\vspace{0.3em}
+
+**Selezione gerarchica (hierarchical / teorica)**
+
+I predittori vengono aggiunti in blocchi teoricamente motivati, non sulla base della significatività statistica.
+
+## Problemi dei Metodi Stepwise
+
+\small
+
+Lo stepwise automatico è \textbf{molto usato e molto criticato}:
+
+\vspace{0.3em}
+
+\begin{itemize}\small
+\item \textbf{Inflazione del Type I error}: con molti predittori testati, la probabilità di trovare almeno un falso positivo esplode
+\item \textbf{Instabilità}: piccole variazioni nei dati producono modelli finali molto diversi
+\item \textbf{Sovrastima degli effect size}: i $\hat{\beta}$ dei predittori selezionati sono sistematicamente sovrastimati (\emph{winner's curse})
+\item \textbf{Ignora la struttura teorica}: un predittore può essere escluso perché correlato ad altri, non perché irrilevante
+\item \textbf{$p$-values non validi}: i $p$-value post-selezione non hanno la loro interpretazione nominale
+\end{itemize}
+
+\vspace{0.3em}
+\footnotesize \textbf{Raccomandazione pratica}: preferire la selezione \textbf{teorica/gerarchica} guidata da ipotesi e DAG. Se si usa stepwise, validare il modello su un campione indipendente.
+
+\vspace{0.2em}
+\tiny Harrell (2015). \emph{Regression Modeling Strategies}. Springer. Capitoli introduttivi Open Access: \url{https://hbiostat.org/rmsc/}
+
+## Selezione Gerarchica (Hierarchical Regression)
+
+\small
+
+I predittori vengono inseriti in **blocchi** ordinati teoricamente, e si valuta il contributo incrementale di ciascun blocco tramite il cambiamento di $R^2$ (o log-likelihood nella logistica).
+
+\vspace{0.3em}
+
+**Esempio neuropsicologico**:
+
+```{=latex}
+\begin{center}
+\begin{tabular}{clcc}
+\toprule
+\textbf{Blocco} & \textbf{Predittori} & $\boldsymbol{R^2}$ & $\boldsymbol{\Delta R^2}$ \\
+\midrule
+1 & Demografici (età, scolarità, sesso) & .18 & .18*** \\
+2 & + Biomarkers imaging (volume ippocampale) & .29 & .11*** \\
+3 & + Score neuropsicologici (MMSE, memoria) & .41 & .12*** \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.3em}
+```
+
+\small In questa logica, ogni blocco è inserito \textbf{per ragioni teoriche}, non perché significativo. Il $\Delta R^2$ risponde alla domanda: "I biomarkers aggiungono potere esplicativo al di là dei soli dati demografici?"
+
+# Diagnostiche del Modello
+
+
+## Diagnostiche della Regressione Lineare
+
+```{=latex}
+% [IMMAGINE SUGGERITA: i 4 plot diagnostici classici di R: Residuals vs Fitted,
+%  Normal Q-Q, Scale-Location, Residuals vs Leverage]
+```
+
+\small
+
+I **residui** ($\hat{\varepsilon}_i = Y_i - \hat{Y}_i$) devono soddisfare le assunzioni del modello. I grafici diagnostici principali:
+
+\vspace{0.3em}
+
+\begin{columns}
+\column{0.5\textwidth}
+\begin{itemize}\footnotesize
+\item \textbf{Residuals vs Fitted}: deve essere nuvola casuale (no pattern $\Rightarrow$ linearità OK, omoschedasticità OK)
+\item \textbf{Normal Q-Q}: i residui devono seguire la diagonale (normalità dei residui)
+\end{itemize}
+\column{0.5\textwidth}
+\begin{itemize}\footnotesize
+\item \textbf{Scale-Location}: per verificare omoschedasticità (varianza costante)
+\item \textbf{Cook's distance / Leverage}: individua i punti influenti (\emph{outliers} che distorcono la retta)
+\end{itemize}
+\end{columns}
+
+\vspace{0.4em}
+\small \textbf{In R}: \texttt{plot(modello)} produce automaticamente questi 4 grafici. \texttt{car::vif(modello)} calcola il VIF per la multicollinearità.
+
+## Diagnostiche: Problemi Comuni
+
+\small
+
+**Multicollinearità**: due o più predittori sono altamente correlati tra loro.
+
+\begin{itemize}\footnotesize
+\item Sintomo: SE grandi, coefficienti instabili, cambi di segno aggiungendo predittori
+\item Diagnosi: VIF (Variance Inflation Factor) --- VIF $> 5$--$10$ indica problema
+\item Soluzione: rimuovere uno dei predittori correlati, usare PCA, o centrare le variabili
+\end{itemize}
+
+\vspace{0.3em}
+
+**Outliers e osservazioni influenti**:
+\begin{itemize}\footnotesize
+\item \emph{Outlier}: residuo molto grande (soggetto mal predetto)
+\item \emph{Leverage}: osservazione con valore estremo nei predittori
+\item \emph{Osservazione influente}: rimuovendola, il modello cambia sostanzialmente (Cook's $D > 1$)
+\end{itemize}
+
+\vspace{0.3em}
+
+**Eteroschedasticità**: la varianza dei residui non è costante (es.\ aumenta con $\hat{Y}$). Soluzione: trasformazione di $Y$ (es.\ log), o errori robusti (HC).
+
+\vspace{0.3em}
+
+**Specificazione del modello**: relazione non lineare tra $X$ e $Y$ --- aggiungere termine quadratico o usare GAM.
+
+## Diagnostiche della Regressione Logistica
+
+\small
+
+**Calibrazione**: il modello prevede probabilità accurate?
+\begin{itemize}\footnotesize
+\item \textbf{Hosmer-Lemeshow test}: divide i soggetti in decili di probabilità predetta e confronta frequenze osservate vs attese. $p > .05$ indica buona calibrazione.
+\item \textbf{Calibration plot}: probabilità predetta (asse $x$) vs proporzione osservata (asse $y$) --- la curva deve stare vicina alla diagonale.
+\end{itemize}
+
+\vspace{0.3em}
+
+**Discriminazione**: il modello distingue bene i casi dai non-casi?
+\begin{itemize}\footnotesize
+\item \textbf{AUC-ROC}: 0.5 = caso, 1.0 = perfetto. Valori $> 0.75$--$0.80$ sono considerati accettabili in clinica.
+\item \textbf{Sensibilità e Specificità} al cut-off ottimale (es.\ Youden Index).
+\end{itemize}
+
+\vspace{0.3em}
+
+**Separazione completa** (\emph{perfect separation}): se un predittore separa perfettamente i due gruppi, il modello non converge. Soluzione: regressione logistica penalizzata (Firth).
+
+# Il Problema dell'Inclusione dei Predittori
+
+## Non Tutti i Predittori Devono Essere Controllati
+
+\small
+
+Un errore frequente nella pratica: inserire nel modello \textbf{tutte le variabili disponibili} o tutte quelle correlate con l'outcome, senza ragionare sulla struttura causale.
+
+\vspace{0.4em}
+
+Come discusso nella \textbf{Sezione 3 (DAG)}, il tipo di variabile che si inserisce nel modello cambia il significato del coefficiente stimato:
+\vspace{0.3em}
+
+```{=latex}
+\begin{center}
+\begin{tabular}{>{\footnotesize}l >{\footnotesize}l >{\footnotesize}p{4.8cm}}
+\toprule
+\textbf{Struttura} & \textbf{Controllare?} & \textbf{Conseguenza se si controlla} \\
+\midrule
+Confounder & \textbf{Sì} & Rimuove associazione spuria tra $X$ e $Y$ \\
+Mediatore  & \textbf{Dipende} & Blocca parte dell'effetto causale di $X$ su $Y$ \\
+Collider   & \textbf{No} & Introduce un'associazione spuria (bias di selezione) \\
+Variabile irrilevante & \textbf{No} & Riduce potere statistico e aumenta SE \\
+\bottomrule
+\end{tabular}
+\end{center}
+```
+
+\vspace{0.2em}
+\small $\Rightarrow$ \textbf{La costruzione del modello deve partire da un DAG, non dai $p$-value.}\\
+\small $\Rightarrow$ Per approfondimento: \textbf{Sezione 3}, slide su DAG, confounders e colliders.
+
+
+## Il Collider nella Regressione: Un Esempio
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  node/.style={circle,draw,fill=mblue!20,font=\footnotesize,
+               minimum size=1.1cm,inner sep=1pt,align=center},
+  coll/.style={circle,draw,fill=mred!20,font=\footnotesize,
+               minimum size=1.1cm,inner sep=1pt,align=center},
+  arr/.style={-{Stealth},mblue,thick},
+  spurious/.style={-{Stealth},mred,dashed,very thick}
+]
+\node[node, align=center] (dep)  at (-2.8,2)  {Depressione\\(X)};
+\node[node, align=center] (cog)  at ( 2.8,2)  {Cognizione\\(Y)};
+\node[coll, align=center] (osp)  at (0,0.5)   {\textbf{Ricovero}\\ospedaliero\\(Collider K)};
+
+\draw[arr] (dep)--(osp);
+\draw[arr] (cog)--(osp);
+\draw[spurious] (dep) to[bend left=30]
+  node[above,font=\tiny,mred, align=center]{Associazione spuria\\se controllo K} (cog);
+\end{tikzpicture}
+\end{center}
+\vspace{-0.3em}
+```
+
+\small Depressione e cognizione sono indipendenti nella popolazione generale. Ma entrambe predicono il ricovero. Se analizziamo \textbf{solo pazienti ricoverati} (o controlliamo per il ricovero), troviamo una correlazione \emph{negativa} artificiosa tra depressione e cognizione.
+
+\vspace{0.2em}
+\footnotesize Questo è il \textbf{Berkson's bias} --- frequente negli studi condotti su campioni clinici.\\
+$\Rightarrow$ \textbf{Sezione 3} per approfondimento.
+
+
+## La Regola dei 10 (e 20) Eventi per Predittore
+
+\small
+
+Nella regressione logistica, il numero di predittori che si possono stimare in modo affidabile dipende dal numero di \textbf{eventi} (categoria meno frequente), non dal numero totale di soggetti.
+
+\vspace{0.3em}
+
+**Regola empirica classica**: almeno **10 eventi per predittore** (EPV = Events Per Variable).
+
+\vspace{0.3em}
+
+**Ricerca recente**: la regola dei 10 EPV può non essere sufficiente; si raccomanda spesso 20 EPV o l'uso di metodi di shrinkage (Ridge, LASSO).
+
+\vspace{0.4em}
+
+**Esempio pratico**:
+
+\begin{itemize}\footnotesize
+\item $N = 200$ soggetti MCI, 40 convertono ad AD (EPV = 40)
+\item Con EPV = 40 si possono stimare in modo affidabile fino a $\sim$4 predittori (regola dei 10)
+\item Inserirne 8 causerebbe overfitting anche con $N = 200$
+\end{itemize}
+
+\vspace{0.2em}
+\tiny Riley et al.\ (2019). Minimum sample size for developing a multivariable prediction model. \emph{Stat Med}. Open Access: \url{https://doi.org/10.1002/sim.7993}
+
+---
+
+# Riepilogo
+
+## Riepilogo: Lineare vs Logistica
+
+```{=latex}
+\begin{center}
+\begin{tabular}{>{\small}l >{\small}l >{\small}l}
+\toprule
+ & \textbf{Regressione Lineare} & \textbf{Regressione Logistica} \\
+\midrule
+Outcome    & Continuo ($Y \in \mathbb{R}$) & Binario ($Y \in \{0,1\}$) \\
+Stima      & Minimi quadrati (OLS) & Massima verosimiglianza \\
+Coefficiente & $\hat{\beta}$: variazione di $Y$ & $\hat{\beta}$: variazione log-odds \\
+Effetto    & $\hat{\beta}$ directo & OR = $e^{\hat{\beta}}$ \\
+Fit        & $R^2$, RMSE & AUC, pseudo-$R^2$, HL \\
+Diagnostica & Residui, Q-Q, Cook's $D$ & Calibrazione, separazione \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.5em}
+\small \textbf{Regola d'oro comune a entrambi}: costruire il modello sulla base di ipotesi teoriche e DAG, non sulla base di stepwise automatico o significatività statistica.
+```
+
+## Risorse Open Access
+
+\small
+
+\begin{itemize}\footnotesize
+
+\item \textbf{Harrell (2015). Regression Modeling Strategies}. Materiali online:\\
+  \url{https://hbiostat.org/rmsc/}
+
+\item \textbf{Riley et al.\ (2019). Sample size for prediction models}. \emph{Stat Med}.\\
+  \url{https://doi.org/10.1002/sim.7993}
+
+\item \textbf{OR vs RR}: Cummings (2009). \emph{Am J Epidemiol} 171(6).\\
+  \url{https://doi.org/10.1093/aje/kwp440}
+
+\item \textbf{LASSO e Ridge}: Tibshirani (1996). \emph{J R Stat Soc B}. (Fondamentale per shrinkage)\\
+  \url{https://doi.org/10.1111/j.2517-6161.1996.tb02080.x}
+
+\item \textbf{Pacchetto R \texttt{rms}} (Harrell): regressione avanzata, calibrazione, validazione.\\
+  \url{https://cran.r-project.org/package=rms}
+
+\item \textbf{DAGitty}: per costruire DAG prima di scegliere i predittori.\\
+  \url{https://www.dagitty.net}
+
+\item \textbf{Sievert (2020). Interactive Web-Based Data Visualization with R} (plotly, ggplot2).\\
+  Libro Open Access: \url{https://plotly-r.com}
+
+\item \textbf{The Effect Book (Huntington-Klein)}: cap.\ su OLS e regressione logistica.\\
+  \url{https://theeffectbook.net}
+
+\end{itemize}
+

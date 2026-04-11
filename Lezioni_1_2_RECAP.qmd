@@ -1,0 +1,83 @@
+---
+title: ""
+author: "Giorgio Arcara"
+date: ""
+format:
+  beamer:
+    theme: metropolis
+    keep-tex: true
+    pdf-engine: xelatex
+incremental: true
+header-includes: |
+  \setbeamerfont{title}{size=\large}
+  \usepackage{hyperref}
+  \setbeamertemplate{footline}[frame number]
+  \usepackage{tikz}
+  \usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, backgrounds, calc}
+  \usepackage{booktabs}
+  \usepackage{xcolor}
+  \definecolor{mblue}{RGB}{35,55,100}
+---
+
+::: {.content-visible when-format="beamer"}
+```{=latex}
+\title{Metodologia della Ricerca Clinica\\
+\vspace{0.5em}
+{\normalsize \textbf{1. Recap}}}
+\author{Giorgio Arcara,\\ Università di Padova \\ IRCCS San Camillo, Venezia}
+\titlegraphic{
+\vspace*{7cm}
+\includegraphics[scale=0.15]{Figures/LogoSanCamilloIRCCS_Unipd_alpha.png}
+\hfill \includegraphics[scale=0.15]{Figures/CC_license_3_0.png}
+}
+\maketitle
+```
+:::
+
+## Recap 1/3
+
+Per una pratica psicologica/neuropsicologica evidence based è essenziale avere  **misurazioni**.
+
+I **test** sono gli strumenti di misurazione psicologica. Misurazione e test sono oggetti di studio della **psicometria**.
+
+Nell'utilizzare nella pratica clinica i test abbiamo un problema particolare: fare inferenze a livello di **caso singolo**, che richiedono attenzioni particolari.
+
+## Recap 2/3
+
+Le conoscenze di **psicometria applicata** entrano in gioco essenzialmente in due momenti:
+
+- quando scegliamo i test da utilizzare
+
+- quando interpretiamo i risultati dei test
+
+
+## Recap 3/3
+
+Alcune considerazioni importanti sono:
+
+```{=latex}
+\begin{itemize}
+\item Considerate \textbf{tutte le proprietà psicometriche di un test}
+
+\begin{itemize}
+  \item validità 
+  \item affidabilità
+  \item dati normativi
+  \item cambiamento nel tempo
+  \item \ldots
+\end{itemize}
+
+\item nella trasformazione di punteggi in percentili (ed eventuale confronto con soglie) ricordate che rispondono alla domanda:
+
+\begin{itemize}
+\item Quanto è "strano" osservare questa performance nel mio campione/popolazione normativa?
+\end{itemize}
+
+\end{itemize}
+
+```
+
+
+
+
+

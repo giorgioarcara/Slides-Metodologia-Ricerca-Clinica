@@ -1,0 +1,101 @@
+---
+title: ""
+author: "Giorgio Arcara"
+date: ""
+format:
+  beamer:
+    theme: metropolis
+    keep-tex: true
+incremental: false
+header-includes:
+  \setbeamerfont{title}{size=\large}
+  \usepackage{hyperref}
+  \setbeamertemplate{footline}[frame number]
+
+---
+
+```{=latex}
+% TITLE SLIDES
+\title{Metodologia della Ricerca Clinica\\ \vspace{1em} \emph{A. Attività}}
+\author{Giorgio Arcara,\\ Università di Padova \\ IRCCS San Camillo, Venezia}
+
+\titlegraphic{
+
+\vspace*{7cm}
+\includegraphics[scale=0.15]{Figures/LogoSanCamilloIRCCS_Unipd_alpha.png}
+\begin{center}
+\vspace{-2.2em}
+\includegraphics[scale=0.15]{Figures/CC_license_3_0.png}
+\end{center}
+}
+\date{\today}
+\maketitle
+```
+
+## 
+```{=latex}
+\begin{center}
+{\Large \textbf{Perché servono i test in (neuro)psicologia?}\\ 5 motivi principali}
+
+\includegraphics[width=0.3\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+## 
+```{=latex}
+\begin{center}
+{\Large \textbf{Perché spesso le qualità di misura di un test non sono considerate?}\\ 3 motivi principali}
+
+\includegraphics[width=0.3\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+
+
+## Un nuovo test
+\small
+Vengono lette tre sequenze e poi è chiesto di ricordare più giorni possibili di ogni sequenza.
+\pause
+
+Lunedì – Martedì – Giovedì – Sabato – Mercoledì – Giovedì - Martedì
+
+Giovedì – Venerdì – Lunedì – Mercoledì – Giovedì - Giovedì  Venerdì
+
+Sabato – Mercoledì – Martedì – Lunedì
+
+L'intero blocco è ripetuto per tre volte.
+
+
+\pause
+Un punto per ogni giorno ricordato nella posizione corretta (separatamete per ogni tre sequenze). Il punteggio totale è la somma degli item ricordati correttamente (nella posizione corretta). 
+\pause
+
+Il test misura le capacità di memoria. Un punteggio inferiore a 7 segnala un deficit.
+
+## 
+```{=latex}
+\begin{center}
+{\Large \textbf{Quale sarebbe il principale limite di utilizzare questo test?}}
+
+\includegraphics[width=0.3\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+
+
+## 
+```{=latex}
+\begin{center}
+{\Large \textbf{Scrivete cinque caratteristiche che utilizzereste per scegliere un test}}
+
+\includegraphics[width=0.3\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+##
+
+```{=latex}
+\begin{center}
+\includegraphics[width=0.4\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```

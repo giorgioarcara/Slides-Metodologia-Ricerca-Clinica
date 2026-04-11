@@ -1,0 +1,898 @@
+---
+title: ""
+author: "Giorgio Arcara"
+date: ""
+format:
+  beamer:
+    theme: metropolis
+    keep-tex: true
+    pdf-engine: xelatex
+incremental: false
+header-includes: |
+  \setbeamerfont{title}{size=\large}
+  \usepackage{hyperref}
+  \setbeamertemplate{footline}[frame number]
+  \usepackage{tikz}
+  \usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, backgrounds, calc}
+  \usepackage{booktabs}
+  \usepackage{xcolor}
+  \definecolor{mblue}{RGB}{35,55,100}
+---
+
+::: {.content-visible when-format="beamer"}
+```{=latex}
+\title{Metodologia della Ricerca Clinica\\
+\vspace{0.5em}
+{\normalsize \textbf{11. Disegni di Ricerca Clinica}}}
+\author{Giorgio Arcara,\\ Università di Padova \\ IRCCS San Camillo, Venezia}
+\titlegraphic{
+\vspace*{7cm}
+\includegraphics[scale=0.15]{Figures/LogoSanCamilloIRCCS_Unipd_alpha.png}
+\hfill \includegraphics[scale=0.15]{Figures/CC_license_3_0.png}
+}
+\maketitle
+```
+:::
+
+# La Gerarchia delle Evidenze
+
+## EBM Pyramid: il filo conduttore del corso
+
+```{=latex}
+% [IMMAGINE SUGGERITA: classica piramide EBM a 6 livelli con colori graduali]
+\begin{center}
+\begin{tikzpicture}[scale=0.85, font=\tiny]
+  \foreach \i/\lbl/\shade in {
+    0/{Opinioni di esperti}/22,
+    1/{Case Series \& Case Report}/30,
+    2/{Studi Caso-Controllo}/40,
+    3/{Studi di Coorte}/52,
+    4/{RCT}/70,
+    5/{Meta-analisi \& \\ Systematic Review}/90
+  }{
+    \pgfmathsetmacro{\w}{6.5 - \i*0.75}
+    \pgfmathsetmacro{\y}{\i*0.6}
+    \fill[mblue!\shade] (-\w/2, \y) rectangle (\w/2, \y+0.55);
+    \node[white, font=\tiny\bfseries, align=center] at (0, \y+0.27) {\lbl};
+  }
+  \node[right, font=\scriptsize, mblue] at (3.5, 3.3) {Forza};
+  \node[right, font=\scriptsize, mblue] at (3.5, 3.0) {evidenze $\uparrow$};
+  \draw[-{Stealth}, mblue, thick] (3.5, 0.3) -- (3.5, 2.9);
+\end{tikzpicture}
+\end{center}
+\vspace{-0.3em}
+\small La piramide \textbf{Evidence Based Medicine} (EBM) pyramid organizza i disegni per \textbf{forza delle evidenze prodotte}.
+```
+
+
+# 1.1 Tassonomia Generale
+
+## Osservazionale vs Interventistico
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners=4pt, fill=mblue!15, text width=4cm,
+              align=center, minimum height=1.4cm, font=\small},
+]
+\node[box] (obs) at (-2.8,0) {
+  \textbf{Osservazionale}\\[4pt]
+  \footnotesize Nessuna manipolazione:\\
+  si osserva il fenomeno\\come avviene naturalmente
+};
+\node[box] (int) at (2.8,0) {
+  \textbf{Interventistico}\\[4pt]
+  \footnotesize Il ricercatore assegna\\
+  attivamente un trattamento\\
+  o una condizione sperimentale
+};
+\node[font=\normalsize\bfseries, mblue] at (0,0) {vs};
+\end{tikzpicture}
+\end{center}
+\vspace{0.4em}
+\begin{columns}
+\column{0.5\textwidth}
+\footnotesize \textbf{Esempio:} associazione tra punteggi ad un test di screening e probabilità sviluppo demenza.
+\column{0.5\textwidth}
+\footnotesize \textbf{Esempio:} training cognitivo computerizzato vs.\ lista d'attesa in pazienti con MCI.
+\end{columns}
+```
+
+## Posso randomizzare?
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  dec/.style={diamond, draw, fill=mblue!20, text width=3.2cm, align=center,
+              font=\footnotesize, inner sep=3pt},
+  term/.style={rectangle, rounded corners, draw, fill=mblue!60, text=white,
+               text width=3.2cm, align=center, font=\footnotesize, minimum height=0.9cm},
+  arr/.style={-{Stealth}, thick}
+]
+\node[dec] (q1) at (0,2.4) {Posso assegnare i soggetti alla condizione sperimentale \textbf{in modo casuale}?};
+\node[term] (yes) at (-2.8,0) {\textbf{RCT}\\\small (Interventistico)};
+\node[term] (no)  at ( 2.8,0) {\textbf{Osservazionale}\\\small o Quasi-sperimentale};
+\draw[arr] (q1) -- node[left,  font=\scriptsize]{Sì} (yes);
+\draw[arr] (q1) -- node[right, font=\scriptsize]{No} (no);
+\end{tikzpicture}
+\end{center}
+\vspace{0.3em}
+\small In neuropsicologia e psicologia clinica la randomizzazione spesso non è praticabile: \textbf{la patologia è già presente}, i vincoli etici lo impediscono, o le risorse sono insufficienti.
+```
+
+## Spiegazioni alternative
+
+Un modo per pensare la diversa forza di evidenze disponibili è relativa all'interpretazione dei risultati.
+
+Negli studi osservazionali esiste una più grande possibilità di **spiegazioni alternative** dei risultati osservati. Questo perché **confounders** noti oppure no, potrebbero avere influenzato i risulatti.
+\vfill
+\small
+_confounder_: variabile associata alla variabile di interesse che può avere influenzato i risultati
+
+# 1.2 Dimensione Temporale negli studi osservazionali
+
+## Retrospettivo vs Prospettico (osservazionali)
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+  \draw[thick, ->] (-4.5,0) -- (4.5,0) node[right,font=\small]{Tempo};
+  \foreach \x in {-4,-2,0,2,4}
+    \draw (\x,0.12)--(\x,-0.12);
+  \node[below,font=\footnotesize] at (-4,-0.25) {Passato};
+  \node[below,font=\footnotesize] at ( 0,-0.25) {Oggi};
+  \node[below,font=\footnotesize] at ( 4,-0.25) {Futuro};
+
+  \draw[-{Stealth}, dashed, mblue!60, very thick] (-3.5,0.95) -- (-0.2,0.95);
+  \node[above,font=\footnotesize,mblue!80] at (-1.85, 1.00) {\textbf{Retrospettivo}};
+  \node[below,font=\tiny,mblue!70,text width=3.5cm,align=center] at (-1.85,0.77)
+    {Dati già esistenti\\(cartelle, registri, archivi)};
+
+  \draw[-{Stealth}, mblue, very thick] (0.2,1.6) -- (3.8,1.6);
+  \node[above,font=\footnotesize,mblue] at (2.0,1.65) {\textbf{Prospettico}};
+  \node[below,font=\tiny,mblue,text width=3.5cm,align=center] at (2.0,1.42)
+    {Raccolta dati pianificata\\per la ricerca};
+\end{tikzpicture}
+\end{center}
+\vspace{0.4em}
+\begin{columns}
+\column{0.5\textwidth}
+\small \textbf{Retrospettivo}: rapido ed economico; rischio di \emph{bias di selezione} e di misura (dati non raccolti per la ricerca).
+\column{0.5\textwidth}
+\small \textbf{Prospettico}: costoso e lento; maggiore controllo su qualità e completezza dei dati.
+\end{columns}
+```
+
+## Studio Cross-Sectional (osservazionali)
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+  \draw[thick,->] (-1,0) -- (5,0) node[right,font=\small]{Tempo};
+  \draw[thick,mblue,dashed] (2,-0.5) -- (2,3.3)
+    node[above,font=\footnotesize,mblue]{\textbf{Snapshot}};
+  \foreach \y/\lbl/\shade in {
+    0.3/{Alzheimer (AD)}/85,
+    1.2/MCI/55,
+    2.1/{Controlli sani}/25
+  }{
+    \fill[mblue!\shade] (1.4,\y) rectangle (2.6,\y+0.7);
+    \node[right,font=\footnotesize] at (2.7,\y+0.35) {\lbl};
+  }
+\end{tikzpicture}
+\end{center}
+\vspace{-0.3em}
+```
+\small
+- Tutti i gruppi misurati in un **unico momento temporale**
+- Economico, rapido
+- Utile per stime di **prevalenza** e per **generare ipotesi**
+- **Limite principale**: non permette di tracciare traiettorie individuali né inferenze causali solide
+
+_Esempio: confronto prestazioni mnestiche tra Controlli, MCI e AD su un singolo time point_
+
+## Studio Longitudinale (osservazionali)
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[scale=0.88]
+  \draw[thick,->] (-0.3,0) -- (5.8,0) node[right,font=\small]{Tempo};
+  \foreach \x/\lbl in {0.3/T0, 1.7/T1, 3.1/T2, 4.5/T3}{
+    \draw (\x,0.1)--(\x,-0.1);
+    \node[below,font=\tiny] at (\x,-0.18) {\lbl};
+  }
+  \draw[thick, mblue!85] plot[smooth]
+    coordinates {(0.3,2.1)(1.7,1.7)(3.1,1.2)(4.5,0.7)}
+    node[right,font=\tiny]{MCI $\to$ AD};
+  \draw[thick, mblue!50] plot[smooth]
+    coordinates {(0.3,2.4)(1.7,2.3)(3.1,2.2)(4.5,2.2)}
+    node[right,font=\tiny]{MCI stabile};
+  \draw[thick, mblue!20] plot[smooth]
+    coordinates {(0.3,3.1)(1.7,3.1)(3.1,3.0)(4.5,3.1)}
+    node[right,font=\tiny]{Controlli};
+  \node[left,font=\tiny,rotate=90] at (0.0,2.0) {Score cognitivo};
+\end{tikzpicture}
+\end{center}
+\vspace{-0.4em}
+```
+
+\small
+
+- Gli stessi soggetti vengono seguiti nel tempo (**follow-up** ripetuto)
+- Permette di studiare **traiettorie individuali** e cambiamento intra-individuale
+- Costoso e lento; soggetto ad **attrition** (abbandono) che può non essere casuale
+
+_Esempio: studio \href{https://adni.loni.usc.edu/}{\underline{\textbf{ADNI}}} — monitoraggio annuale per predire conversione MCI $\to$ AD_
+
+## Cross-Sectional come primo passo
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, fill=mblue!20, text width=5cm,
+              align=center, font=\footnotesize, minimum height=2cm},
+  arr/.style={-{Stealth}, thick, mblue}
+]
+\node[box] (cs)   at (0, 5.0) {\textbf{Cross-sectional}\\[3pt]\tiny Identifica differenze tra gruppi e potenziali biomarcatori. Stima l'effect size.};
+\node[box] (hyp)  at (0, 2.5) {\textbf{Ipotesi operative}\\[3pt]\tiny Quali misure discriminano? Quale N è necessario per un longitudinale?};
+\node[box] (long) at (0, 0.0) {\textbf{Studio Longitudinale}\\[3pt]\tiny Verifica se i biomarcatori predicono la conversione nel tempo.};
+\draw[arr] (cs)  -- (hyp);
+\draw[arr] (hyp) -- (long);
+\node[right,font=\tiny,text width=5cm] at (3,5) {Es.\ Controllo > MCI > AD al test X};
+\node[right,font=\tiny,text width=5cm] at (3,2.5) {Calcolo sample size (power analysis), pianificazione};
+\node[right,font=\tiny,text width=5cm] at (3,0.0) {Es.\ Studio longitudinale che indaga progressione dopo avere raccolto punteggi al test X};
+\end{tikzpicture}
+\end{center}
+```
+
+## Studi di Coorte e Caso-Controllo
+
+\begin{columns}
+\column{0.5\textwidth}
+\textbf{Studio di Coorte}
+\vspace{0.3em}
+
+\footnotesize Si segue un gruppo (\emph{coorte}) nel tempo. Si confrontano esposti vs non esposti a un fattore.
+
+\vspace{0.3em}
+\emph{Es.} Pazienti con depressione vs controlli: chi sviluppa declino cognitivo entro 5 anni?
+
+\vspace{0.3em}
+\textbf{Pro}: ordine temporale chiaro\\
+\textbf{Contro}: costoso, lungo, attrition
+
+\column{0.5\textwidth}
+\textbf{Studio Caso-Controllo}
+\vspace{0.3em}
+
+\footnotesize Si parte dall'\emph{outcome} (casi vs controlli senza la condizione) e si guarda retrospettivamente all'esposizione.
+
+\vspace{0.3em}
+\emph{Es.} Pazienti con ictus vs controlli: differenze nel profilo neuropsicologico pre-morboso (da cartelle)?
+
+\vspace{0.3em}
+\textbf{Pro}: efficiente per patologie rare\\
+\textbf{Contro}: bias di selezione e recall
+\end{columns}
+
+# 1.3 RCT e Disegni Sperimentali
+
+## Il Randomized Controlled Trial (RCT)
+
+L'efficacia del trattamento è studiata tramite l'allocazione **random** a due trattamenti: uno sperimentale e uno di controllo.
+
+## Perché randomizzare?
+
+- La randomizzazione **bilancia i confounders noti e ignoti** tra i gruppi, anche quelli che non abbiamo misurato
+- Senza randomizzazione, le differenze osservate potrebbero riflettere **differenze pre-esistenti** tra i gruppi (selection bias)
+
+\vspace{0.5em}
+
+_Esempio: se i pazienti più motivati *scelgono* il training cognitivo, qualsiasi miglioramento osservato potrebbe essere dovuto alla motivazione, non al training._
+
+\vspace{0.5em}
+
+## Elementi fondamentali di un RCT di qualità
+
+\small
+- Sequenza di randomizzazione con \href{https://pmc.ncbi.nlm.nih.gov/articles/PMC6022887/pdf/10.1177_0141076818776604.pdf}{\underline{\textbf{allocation concealment}}}
+- **Blinding**: singolo (paziente), doppio (+ valutatore), triplo (+ analista)
+- Analisi **intention-to-treat** (ITT) vs per-protocol
+- Controllo **adeguato**
+- Reporting secondo standard **CONSORT**
+
+\vspace{0.2em}
+\tiny Moher et al.\ (2010). CONSORT 2010. \emph{BMJ} 340:c332. \href{https://www.bmj.com/content/340/bmj.c332}{\underline{\textbf{Download Article}}}
+
+## Tipi di Disegno RCT
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, fill=mblue!15, text width=3.3cm,
+              align=center, font=\footnotesize, minimum height=1.1cm},
+]
+\node[box] at (-6, 2) {\textbf{Parallel Arms}\\\tiny Due o più gruppi separati ricevono trattamenti diversi in parallelo};
+\node[box] at ( -2,   2) {\textbf{Crossover}\\\tiny Ogni soggetto riceve entrambi i trattamenti in ordine casuale};
+\node[box] at ( 2, 2) {\textbf{Factorial}\\\tiny Valutazione simultanea di più fattori (es.\ farmaco + training cognitivo)};
+\node[box] at (-6, 0) {\textbf{Cluster RCT}\\\tiny Randomizzazione a livello di gruppo (es.\ clinica, reparto, scuola)};
+\node[box] at ( -2, 0) {\textbf{Adaptive}\\\tiny La randomizzazione viene aggiustata in itinere su dati interim};
+\node[box] at ( 2,0) {\textbf{Stepped-Wedge}\\\tiny Tutti i cluster ricevono il trattamento, ma scaglionati nel tempo};
+\end{tikzpicture}
+\end{center}
+```
+
+## Disegno RCT Parallel Arms
+
+```{=latex}
+% [IMMAGINE SUGGERITA: CONSORT flow diagram ufficiale]
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, fill=mblue!20, text width=4cm,
+              align=center, font=\footnotesize, minimum height=0.5cm},
+  arr/.style={-{Stealth}, thick, mblue}
+]
+\node[box] (pop)  at (0, 4.2) {Popolazione eleggibile};
+\node[box] (elig) at (0, 3.0) {Screening \& consenso informato};
+\node[box] (rand) at (0, 1.8) {\textbf{Randomizzazione}};
+\node[box, fill= mblue!05] (trt)  at (-2.5, 0.4) {Gruppo\\Trattamento};
+\node[box, fill= mblue!80, text=white] (ctrl) at ( 2.5, 0.4) {Gruppo\\Controllo};
+\node[box] (o1)   at (-2.5,-0.9) {Outcome};
+\node[box] (o2)   at ( 2.5,-0.9) {Outcome};
+\node[box] (anal) at (0,  -2.1) {Analisi comparativa};
+\draw[arr] (pop)  -- (elig);
+\draw[arr] (elig) -- (rand);
+\draw[arr] (rand) -- (trt);
+\draw[arr] (rand) -- (ctrl);
+\draw[arr] (trt)  -- (o1);
+\draw[arr] (ctrl) -- (o2);
+\draw[arr] (o1)   -- (anal);
+\draw[arr] (o2)   -- (anal);
+\end{tikzpicture}
+\end{center}
+```
+
+<!--
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[scale=0.9]
+  \draw[thick,->] (0,0) -- (6.5,0) node[right,font=\small]{Tempo};
+  \foreach \x/\lbl in {0.5/Baseline, 3/Metà, 6/Post}{
+    \draw (\x,0.12)--(\x,-0.12);
+    \node[below,font=\tiny] at (\x,-0.2) {\lbl};
+  }
+  \draw[thick, mblue!80] (0.5,2.0) -- (6,3.0)
+    node[right,font=\footnotesize]{Training cognitivo};
+  \draw[thick, mblue!30] (0.5,2.0) -- (6,2.1)
+    node[right,font=\footnotesize]{Controllo attivo};
+  \node[left,font=\footnotesize,rotate=90] at (0.2,2.0) {Score cognitivo};
+  \draw[dashed,mblue!60] (0.5,1.3) -- (0.5,3.2);
+  \node[above,font=\tiny,mblue] at (0.5,3.25) {Randomizzazione};
+\end{tikzpicture}
+\end{center}
+\vspace{-0.4em}
+```
+-->
+
+## RCT Parallel arms: note
+
+- Disegno più comune: due o più gruppi ricevono trattamenti diversi **in parallelo** per tutta la durata
+
+
+**Vantaggi**
+- semplice da implementare, analizzare e interpretare
+
+Importante tenere conto di: 
+
+- la variabilità inter-individuale richiede campioni ampi; 
+- il **controllo attivo** (es.\ attività motoria) è preferibile al no-treatment per controllare effetti aspecifici (es. aspettativa, coinvolgimento emotivo).
+
+## Disegno RCT Crossover
+
+```{=latex}
+\begin{center}
+\small
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, fill=mblue!20, text width=4cm,
+  align=center, font=\footnotesize, minimum height=0.5cm},
+  arr/.style={-{Stealth}, thick, mblue}
+]
+\node[box] (pop)  at (0, 4.2) {Popolazione eleggibile};
+\node[box] (elig) at (0, 3.0) {Screening \& consenso informato};
+\node[box] (rand) at (0, 1.8) {\textbf{Randomizzazione}};
+\node[box, fill=mblue!80, text=white] (trt1A)  at (-2.5, 0.8) {Trattamento A};
+\node[box, fill=mblue!05] (trt2B) at ( 2.5, 0.8) {Trattamento B};
+\node[box] (wash)  at (0, 0) {Washout};
+\node[box, fill=mblue!05] (trt1B)  at (-2.5, -1) {Trattamento B};
+\node[box, fill=mblue!80, text=white] (trt2A) at ( 2.5, -1) {Trattamento A};
+\node[box] (o1)   at (-2.5,-2) {Outcome};
+\node[box] (o2)   at ( 2.5,-2) {Outcome};
+\node[box] (anal) at (0,  -3) {Analisi comparativa};
+\draw[arr] (pop)  -- (elig);
+\draw[arr] (elig) -- (rand);
+\draw[arr] (rand) -- (trt1A);
+\draw[arr] (rand) -- (trt2B);
+\draw[arr] (trt1A) -- (wash);
+\draw[arr] (trt2B) -- (wash);
+\draw[arr] (wash) -- (trt1B);
+\draw[arr] (wash) -- (trt2A);
+\draw[arr] (trt1B) -- (o1);
+\draw[arr] (trt2A) -- (o2);
+\draw[arr] (o1)   -- (anal);
+\draw[arr] (o2)   -- (anal);
+\end{tikzpicture}
+\end{center}
+```
+
+
+
+<!--
+  ```{=latex}
+
+\begin{center}
+\begin{tikzpicture}[
+  scale=0.65, transform shape,
+  box/.style={draw, rounded corners=4pt, fill=mblue!20,
+  text width=2.4cm, align=center, font=\small,
+  minimum height=1cm},
+  darkbox/.style={draw, rounded corners=4pt, fill=mblue!70,
+  text width=2.4cm, align=center,
+  font=\small\bfseries\color{white},
+  minimum height=1cm},
+  washout/.style={draw, fill=mblue!15, minimum width=1.0cm,
+  minimum height=5.0cm, align=center, font=\small,
+  text width=0.85cm},
+  >=stealth, thick
+]
+
+\node[box] (participants) {Study participants};
+\node[box, right=1cm of participants] (rand) {Randomization};
+
+\node[darkbox, above right=0.8cm and 1cm of rand] (tA1) {Treatment A};
+\node[darkbox, below right=0.8cm and 1cm of rand] (tB1) {Treatment B};
+
+\node[washout] (wash) at ($(tA1)!0.5!(tB1) + (1.8cm,0)$) {Washout period};
+
+\node[darkbox] (tB2) at ($(wash) + (1.9cm, 0.9cm)$) {Treatment B};
+\node[darkbox] (tA2) at ($(wash) + (1.9cm,-0.9cm)$) {Treatment A};
+
+\node[above=0.2cm of tA1, font=\small\bfseries] {Period 1};
+\node[above=0.2cm of tB2, font=\small\bfseries] {Period 2};
+
+\draw[->] (participants) -- (rand);
+\draw[->] (rand.east) -- ++(0.4,0) |- (tA1.west);
+\draw[->] (rand.east) -- ++(0.4,0) |- (tB1.west);
+
+\draw[->] (tA1.east) -- (wash.north west |- tA1.east);
+\draw[->] (tB1.east) -- (wash.south west |- tB1.east);
+
+\draw[->] (wash.north east |- tB2.west) -- (tB2.west);
+\draw[->] (wash.south east |- tA2.west) -- (tA2.west);
+
+\end{tikzpicture}
+\end{center}
+```
+-->
+  
+## Disegno crossover: Note
+  \small
+
+**Vantaggi**
+  - Ogni soggetto è controllo di sé stesso
+- Etico: ogni soggetto sarà sottoposto a miglior trattamento
+
+Importante tenere conto di: 
+  
+  - **Effetto periodo**: verificare se il tempo influenza i risultati
+- **Effetto sequenza**: considerare l’ordine dei trattamenti (A$\to$B vs B$\to$A)
+- **Effetto carryover**: controllare che il primo trattamento non influenzi il secondo
+- **Washout**: inserire periodo di “washout” tra trattamenti (può non essere possibile)
+
+
+## RCT Non-inferiority design
+
+è un RCT in cui il controllo è il _miglior trattamento disponibile_
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, fill=mblue!20, text width=4cm,
+  align=center, font=\footnotesize, minimum height=0.5cm},
+  arr/.style={-{Stealth}, thick, mblue}
+]
+\node[box] (pop)  at (0, 4.2) {Popolazione eleggibile};
+\node[box] (elig) at (0, 3.0) {Screening \& consenso informato};
+\node[box] (rand) at (0, 1.8) {\textbf{Randomizzazione}};
+\node[box, fill=mblue!80, text=white] (trt)  at (-2.5, 0.4) {Gruppo\\ Nuovo Trattamento};
+\node[box, fill=mblue!05] (ctrl) at ( 2.5, 0.4) {Gruppo\\Miglior Trattamento\\ Disponibile};
+\node[box] (o1)   at (-2.5,-0.9) {Outcome};
+\node[box] (o2)   at ( 2.5,-0.9) {Outcome};
+\node[box] (anal) at (0,  -2.1) {Analisi comparativa};
+\draw[arr] (pop)  -- (elig);
+\draw[arr] (elig) -- (rand);
+\draw[arr] (rand) -- (trt);
+\draw[arr] (rand) -- (ctrl);
+\draw[arr] (trt)  -- (o1);
+\draw[arr] (ctrl) -- (o2);
+\draw[arr] (o1)   -- (anal);
+\draw[arr] (o2)   -- (anal);
+\end{tikzpicture}
+\end{center}
+```
+
+
+
+## Disegno non-inferiority design: note
+
+spesso è usato per proporre trattamenti più brevi/economici/meno invasivi.
+è associato ad una tolleranza per considerare il trattamento non inferiore.
+
+**Vantaggi**:
+
+- Etico: nessun gruppo non partecipa a nessun trattamento
+
+Importante tenere conto di: 
+  
+- Più difficile interpretare
+- Con una certa tolleranza, questi disegni potrebbero spingere verso trattamenti progressivamente peggiori. 
+
+## Tipologie di randomizzazione
+Esistono diversi tipi di modi di rifinire la randomizzazione 
+
+- **Stratified Randomization** alcune variabili rilevanti sono prese in considerazione, per evitare che i gruppi (tratt vs controllo) siano troppo sbilanciati.
+
+- **Cluster Randomization** ad essere randomizzati non sono i singoli individui, ma i cluster (es. tutti i pazienti di un ospedale fanno trattamento A, tutti i pazienti di un altro fanno trattamento B). 
+
+- ...
+\vfill
+
+vedi \href{https://nata.kglmeridian.com/view/journals/attr/43/2/article-p215.xml}{\underline{\textbf{approfondimenti}}}
+
+
+# Disegni Quasi-Sperimentali
+
+## Disegni Quasi-Sperimentali: Interrupted Time Series
+
+![](Figures/Interrupted.png){width="80%" fig-align="center"}
+
+<!--
+  ```{=latex}
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+\draw[thick,->] (0,0) -- (7.5,0) node[right,font=\small]{Tempo};
+\node[below,font=\tiny] at (1.0,-0.25) {Pre};
+\node[below,font=\tiny] at (5.5,-0.25) {Post};
+\draw[dashed,mblue,very thick] (3.5,-0.5)--(3.5,3.0)
+node[above,font=\footnotesize,mblue]{\textbf{Intervento}};
+% Pre trend
+\draw[thick,mblue!50] plot[smooth]
+coordinates {(0.5,1.3)(1.0,1.4)(1.5,1.35)(2.0,1.5)(2.5,1.45)(3.0,1.55)(3.5,1.6)};
+% Post: change in level and slope
+\draw[thick,mblue] plot[smooth]
+coordinates {(3.5,2.2)(4.0,2.4)(4.5,2.55)(5.0,2.7)(5.5,2.8)(6.0,2.95)(6.5,3.05)};
+\node[left,font=\footnotesize,rotate=90] at (0.2,1.8) {Outcome};
+\draw[<->,mblue!70] (3.6,1.65)--(3.6,2.15);
+\node[right,font=\tiny,mblue!70] at (3.65,1.9) {Cambio di livello};
+\end{tikzpicture}
+\end{center}
+\vspace{-0.3em}
+```
+-->
+  
+## Interrupted time series: note
+  
+  \small Serie temporale di misure **prima e dopo** un intervento non randomizzato. Si valutano cambiamenti di **livello** e/o **pendenza**. Esempio: si monitora ripetutamente nel tempo un paziente e poi si monitora dopo l'inizio del trattamento..
+
+## Altri Disegni Quasi-Sperimentali
+
+Esistono numerosi altri disegni quasi sperimentali. 
+
+\href{https://www.betterevaluation.org/sites/default/files/Quasi-Experimental_Design_and_Methods_ENG.pdf}{\underline{\textbf{Overview di disegni quasi sperimentali (Unicef)}}}
+
+\href{https://pmc.ncbi.nlm.nih.gov/articles/PMC11741180/}{\underline{\textbf{Articolo su disegni quasi sperimentali}}}
+
+\small
+
+<!--
+**Regression Discontinuity (RD)**
+
+Sfrutta una soglia arbitraria che determina chi riceve il trattamento. Chi è appena sotto o sopra la soglia è quasi-randomizzato.
+
+\emph{Esempio}: pazienti con MMSE $\leq 23$ accedono a un programma riabilitativo. Chi è a 22 vs 24 è presumibilmente simile — la soglia crea un confronto quasi-sperimentale.
+
+\vspace{0.4em}
+
+**Differenze-in-Differenze (DiD)**
+
+Confronta il cambiamento nel tempo tra un gruppo "trattato" e un gruppo di confronto, controllando per trend pre-esistenti.
+
+\vspace{0.4em}
+
+**Natural Experiments**
+
+Sfruttano variazioni "accidentali" nell'esposizione (policy, disastri, variazioni geografiche) per stimare effetti causali.
+-->
+
+## Parentesi: Psicometria e sperimentazione clinica
+
+Quale è il ruolo della psicometria (test e misure) nella sperimentazione clinica?
+\pause
+
+**Le inferenze cliniche in psicologia e neuropsicologia dipendono enormemente dai test che utilizziamo**
+
+Esempi: 
+
+- Potremmo non trovare effetti perchè i test hanno bassa affidabilità
+- Potremmo interpretare su base di _face validity_ ma non di reale _validità di costrutto_
+  
+
+# 1.4 Selezione del Campione e Power Statistico
+  
+## Selezione del Campione
+  
+\small
+
+La **rappresentatività del campione** determina la generalizzabilità dei risultati.
+
+\vspace{0.4em}
+
+**Criteri di inclusione/esclusione**: devono essere esplicitati e giustificati teoricamente.
+
+\begin{itemize}\footnotesize
+\item Es.\ studio su MCI: età 60--85, scolarità $\geq$ 5 anni, assenza di depressione maggiore in atto, assenza di deficit sensoriali non corretti
+\item Trade-off: campione omogeneo (validità interna) vs.\ eterogeneo (validità esterna)
+\end{itemize}
+
+\vspace{0.4em}
+
+## Bias di selezione comuni in neuropsicologia/psicologia
+
+\begin{itemize}
+\item \emph{Referral bias}: chi arriva in clinica non rappresenta la popolazione generale
+\item \emph{Healthy volunteer bias}: chi si offre volontario è sistematicamente più sano
+\item \emph{Survivorship bias}: nei longitudinali, chi abbandona non è un dropout casuale
+\item \emph{WEIRD samples}: studi su popolazioni Western, Educated, Industrialized, Rich, Democratic
+\end{itemize}
+
+## Trade-off generalizzabile?
+
+In studi neuropsicologici spesso validità interna e validità esterna sono in conflitto.
+All'aumentare della validità interna (campione omogeneo per stabilire causa-effetto tra patologia e fenomeni di interesse) diminuisce validità esterna (generalizzabilità dei risultati).
+
+
+## Convenience Sampling
+
+Spesso nei casi di studi psicologici il campione non è realmente un **campione di convenienza** (campione a cui vi è facile accesso, es. amici, colleghi, persone che si presentano al servizio). 
+
+Questa tipologia di campionamento pone limiti a generalizzabilità, perché può introdurre _bias_.
+
+
+## Power (Potere Statistico)
+```{r}
+#| fig.width: 5
+#| fig.height: 4
+#| out-width: "70%"
+#| fig.align: "center"
+# Parametri
+alpha <- 0.05
+delta <- seq(0, 1, length.out = 100)   # dimensione effetto (Cohen's d)
+
+# Diversi livelli di numerosità
+n_levels <- c(20, 50, 100, 200)
+# Palette moderna (colorblind-friendly, stile Okabe–Ito)
+colors <- c("#0072B2",  # blu
+            "#D55E00",  # arancione
+            "#009E73",  # verde
+            "#CC79A7")  # viola/rosa
+# Plot vuoto
+plot(NULL, xlim = range(delta), ylim = c(0, 1),
+     xlab = "Dimensione dell'effetto (d)",
+     ylab = "Power statistico",
+     main = "Curve di Power - t-test between (due code)")
+
+# Loop sui diversi n
+for (i in 1:length(n_levels)) {
+  n <- n_levels[i]
+  df <- n - 1
+  
+  # valore critico t (due code)
+  t_crit <- qt(1 - alpha/2, df)
+  
+  # parametro di non centralità
+  ncp <- delta * sqrt(n)
+  
+  # power: P(|T| > t_crit)
+  power <- 1 - (pt(t_crit, df, ncp) - pt(-t_crit, df, ncp))
+  
+  # Disegno curva
+  lines(delta, power, col = colors[i], lwd = 2)
+}
+
+# Legenda
+legend("bottomright",
+       legend = paste("n =", n_levels),
+       col = colors,
+       lwd = 2)
+
+```
+
+<!--
+  ```{=latex}
+% [IMMAGINE SUGGERITA: power curve classica con diverse linee per effect size differenti]
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+\draw[thick,->] (0,0) -- (5.5,0) node[right,font=\small]{$N$ per gruppo};
+\draw[thick,->] (0,0) -- (0,3.8) node[above,font=\small]{Potere ($1-\beta$)};
+\draw[dashed,gray] (0,2.55) -- (5.3,2.55)
+node[right,font=\tiny,gray]{80\%};
+\draw[thick,mblue!85] plot[smooth]
+coordinates {(0.3,0.4)(1.0,1.8)(1.8,2.55)(2.5,2.9)(4.0,3.2)}
+node[right,font=\tiny]{$d = 0.8$ (grande)};
+\draw[thick,mblue!55] plot[smooth]
+coordinates {(0.3,0.2)(1.5,1.0)(2.5,1.8)(3.5,2.55)(5.0,3.0)}
+node[right,font=\tiny]{$d = 0.5$ (medio)};
+\draw[thick,mblue!25] plot[smooth]
+coordinates {(0.3,0.1)(2.0,0.5)(3.5,1.2)(5.0,1.9)}
+node[right,font=\tiny]{$d = 0.2$ (piccolo)};
+\end{tikzpicture}
+\end{center}
+\vspace{-0.4em}
+```
+-->
+  
+  
+  \small Per $\alpha = 0.05$, potere $= 80\%$, effetto medio ($d = 0.5$): circa 64 soggetti per gruppo. Gli studi neuropsicologici sono spesso \textbf{underpowered} per effetti piccoli.
+
+## Replication Crisis e Open Science
+
+\small
+
+**Il problema**: studi con N piccolo producono stime di effect size instabili e sovrastimate (quando significative).
+
+\vspace{0.3em}
+
+**Open Science Collaboration (2015)**: 100 studi di psicologia replicati — solo $\sim 36 \%$ ha ottenuto risultati significativi.
+
+\vspace{0.4em}
+
+**Soluzioni pratiche**:
+  
+  \begin{itemize}\footnotesize
+\item \textbf{Pre-registrazione}: ipotesi e analisi dichiarate prima di raccogliere i dati (ClinicalTrials.gov, OSF.io)
+\item \textbf{Registered Reports}: la rivista accetta il paper \emph{prima} di vedere i risultati
+\item \textbf{Open data e open materials}: riproducibilità delle analisi
+\item \textbf{Multi-site studies}: aumentano la potenza e la generalizzabilità
+\item Riportare sempre \textbf{effect size} e \textbf{intervalli di confidenza}, non solo il $p$-value
+\end{itemize}
+
+\vspace{0.2em}
+\tiny Open Science Collaboration (2015). \emph{Science} 349(6251). Open Access: \url{https://doi.org/10.1126/science.aac4716}
+
+# 1.5 Machine Learning e Studi Predittivi (Cenni)
+
+## ML in Ricerca Clinica
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners, fill=mblue!15, text width=3.5cm,
+  align=center, font=\footnotesize, minimum height=1.0cm},
+  arr/.style={-{Stealth}, thick, mblue}
+]
+\node[box] (feat) at (0,3) {\textbf{Features (input)}\\[3pt]\tiny Punteggi ai test, imaging, biomarkers, dati demografici};
+\node[box] (mod)  at (0,0) {\textbf{Modello ML}\\[3pt]\tiny Random Forest, SVM, Reti Neurali, Gradient Boosting, \ldots};
+\node[box] (pred) at (0,-3) {\textbf{Predizione (output)}\\[3pt]\tiny Es.\ probabilità di conversione MCI $\to$ AD entro 2 anni};
+\draw[arr] (feat) -- (mod);
+\draw[arr] (mod)  -- (pred);
+\node[right,font=\tiny,text width=3.5cm] at (1.9,3) {Fasi: training, validation, test};
+\node[right,font=\tiny,text width=3.5cm] at (1.9,0) {Ottimizzazione su dati con "label"};
+\node[right,font=\tiny,text width=3.5cm] at (1.9,-3) {Classe o probabilità};
+\end{tikzpicture}
+\end{center}
+```
+## ML vs Inferenza Classica
+
+\small
+
+|  | **Inferenza classica** | **Machine Learning** |
+  |--|--|--|
+  | \footnotesize Obiettivo | \footnotesize Testare ipotesi, spiegare | \footnotesize Predire outcome |
+  | \footnotesize Focus | \footnotesize Parametri, $p$-value | \footnotesize Accuratezza, AUC-ROC |
+  | \footnotesize Rischio principale | \footnotesize Falsi positivi (Type I) | \footnotesize Overfitting |
+  | \footnotesize Validazione | \footnotesize Test statistici | \footnotesize Cross-validation, hold-out |
+  | \footnotesize Interpretabilità | \footnotesize Alta | \footnotesize Variabile (black box) |
+  
+  \vspace{0.4em}
+\small \textbf{Attenzione}: un modello ML predice ma non spiega meccanismi causali. Per interventi clinici serve anche una comprensione causale (vedi prossime lezioni).
+
+
+```{=latex}
+\vspace{0.2em}
+\tiny Scandola et al. (2022). ML for brain disorders. \emph{NeuroImage}. \href{https://bpspsychub.onlinelibrary.wiley.com/doi/full/10.1111/jnp.70009}{\underline{\textbf{Download Article}}}
+```
+
+
+## ML: Principali problemi
+
+\small
+
+**Overfitting**: il modello impara a memoria i dati di training, ma non generalizza a nuovi dati.
+
+\vspace{0.25em}
+
+**Data leakage**: Alcuni dati esterni al "training set" filtrano all'interno (in genere usando variabili sbagliate nella predizione)
+
+\vspace{0.25em}
+
+**Bias dei dati di training**: modello addestrato su popolazioni non rappresentative (es.\ solo caucasici anziani) non funziona su altri gruppi.
+
+\vspace{0.25em}
+
+**Piccoli campioni in neuropsicologia**: molti studi ML pubblicati hanno N troppo piccolo per una validazione robusta. Il numero di features supera spesso il numero di soggetti ($p \gg n$).
+
+\vspace{0.25em}
+
+**Explainability**: molti modelli di ML sono di difficile interpretabilità (es. _"Importance"_ non dice la direzione dell'effetto di una variable, che può cambiare a seconda dei valori di altri variabili).
+<!-- SHAP values, LIME e feature importance aiutano a capire \emph{cosa} il modello sta usando, ma non implicano causalità. -->
+
+# Riepilogo
+
+## Riepilogo: Mappa dei Disegni
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  main/.style={draw, rounded corners, fill=mblue!70, text=white,
+               font=\small\bfseries, text width=2.5cm, align=center, minimum height=0.75cm},
+  sub/.style={draw, rounded corners, fill=mblue!20,
+              font=\footnotesize, text width=2.1cm, align=center, minimum height=0.65cm},
+  arr/.style={-{Stealth}, mblue, thick}
+]
+\node[main] (obs) at (-3.2, 3.0) {Osservazionale};
+\node[main] (int) at ( 3.2, 3.0) {Interventistico};
+\node[sub]  (ret) at (-4.5, 1.6) {Retrospettivo};
+\node[sub]  (pro) at (-1.9, 1.6) {Prospettico};
+\node[sub]  (cs)  at (-4.5, 0.3) {Cross-sectional};
+\node[sub]  (lo)  at (-1.9, 0.3) {Longitudinale};
+\node[sub]  (rct) at ( 2.0, 1.6) {RCT};
+\node[sub]  (qe)  at ( 4.4, 1.6) {Quasi-sperimentale};
+\draw[arr] (obs)--(ret); \draw[arr] (obs)--(pro);
+\draw[arr] (ret)--(cs);  \draw[arr] (pro)--(lo);
+\draw[arr] (ret)--(cs);  \draw[arr] (pro)--(lo);
+\draw[arr] (ret)--(lo);  \draw[arr] (pro)--(cs);
+\draw[arr] (int)--(rct); \draw[arr] (int)--(qe);
+\end{tikzpicture}
+\end{center}
+```
+
+<!--
+## Risorse Open Access — Sezione 1
+
+\small
+
+\begin{itemize}\footnotesize
+
+\item \textbf{CONSORT 2010}: Schulz et al.\ \emph{BMJ} 340:c332.\\
+  \url{https://www.bmj.com/content/340/bmj.c332}
+
+\item \textbf{STROBE} (studi osservazionali): von Elm et al.\ \emph{PLoS Med} 2007.\\
+  \url{https://doi.org/10.1371/journal.pmed.0040296}
+
+\item \textbf{Replication Crisis}: Open Science Collaboration. \emph{Science} 2015.\\
+  \url{https://doi.org/10.1126/science.aac4716}
+
+\item \textbf{EBM Pyramid}: Murad et al.\ \emph{Evid Based Med} 2016.\\
+  \url{https://doi.org/10.1136/ebmed-2016-110401}
+
+\item \textbf{ML in neuroimaging}: Varoquaux \& Cheplygina. \emph{NeuroImage} 2022.\\
+  \url{https://doi.org/10.1016/j.neuroimage.2022.119023}
+
+\item \textbf{Pre-registrazione e Open Science}: Nosek et al.\ \emph{PNAS} 2018.\\
+  \url{https://doi.org/10.1073/pnas.1708274114}
+
+\item \textbf{ADNI Study} (esempio longitudinale MCI $\to$ AD):\\
+  \url{https://adni.loni.usc.edu}
+
+\end{itemize}
+
+-->

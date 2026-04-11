@@ -1,0 +1,110 @@
+---
+title: ""
+author: "Giorgio Arcara"
+date: ""
+format:
+  beamer:
+    theme: metropolis
+    keep-tex: true
+incremental: false
+header-includes:
+  \setbeamerfont{title}{size=\large}
+  \usepackage{hyperref}
+  \setbeamertemplate{footline}[frame number]
+
+---
+
+```{=latex}
+% TITLE SLIDES
+\title{Metodologia della Ricerca Clinica\\ \vspace{1em} \emph{B. Attività}}
+\author{Giorgio Arcara,\\ Università di Padova \\ IRCCS San Camillo, Venezia}
+
+\titlegraphic{
+
+\vspace*{7cm}
+\includegraphics[scale=0.15]{Figures/LogoSanCamilloIRCCS_Unipd_alpha.png}
+\begin{center}
+\vspace{-2.2em}
+\includegraphics[scale=0.15]{Figures/CC_license_3_0.png}
+\end{center}
+}
+\date{\today}
+\maketitle
+```
+
+## 
+```{=latex}
+\begin{center}
+{\Large \textbf{Come scegliere un test e valutarlo? \\(riassunto lezione precedente)}}
+
+\end{center}
+```
+
+
+## Un ipotetico test (test A)
+
+ Task  | Punteggio grezzo | Percentile | Cut-off |
+|--------------------------|------------------|------------|---------|
+| Memoria                  | 45               | 60         |         |
+| Attenzione               | 30               | 25         | *       |
+| Linguaggio               | 50               | 75         |         |
+| Funzioni esecutive       | 28               | 15         | *       |
+| Visuospaziale            | 40               | 50         |         |
+| Velocità di elaborazione | 22               | 10         | *       |
+
+## Un ipotetico test (test B)
+
+ Task  | Punteggio grezzo | Percentile |  |
+|--------------------------|------------------|------------|---------|
+| Memoria                  | 45               | 60         |         |
+| Attenzione               | 30               | 25         |         |
+| Linguaggio               | 50               | 75         |         |
+| Funzioni esecutive       | 28               | 15         |         |
+| Visuospaziale            | 40               | 50         |         |
+| Velocità di elaborazione | 22               | 10         |         |
+
+## Wooclap
+
+![](Figures/wooclap_metodi.png){fig-align="center"}
+
+## 
+```{=latex}
+\begin{center}
+{\Large \textbf{Cosa ci dice che una prestazione è al di sotto del cut-off? E perché è utile?}}
+
+\includegraphics[width=0.3\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+##
+
+Costruzione delle soglie
+
+##
+```{=latex}
+{\Large \textbf{Come sono costruite le soglie utilizzate in clinica?}}
+```
+
+
+##
+```{=latex}
+\begin{center}
+{\Large \textbf{Quando può il confronto con le norme potrebbe non essere adeguato?}}
+
+\includegraphics[width=0.3\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+
+##
+```{=latex}
+\begin{center}
+{\Large \textbf{Cosa succede a Specificità se aumenta Sensibilità?}}
+
+\includegraphics[width=0.3\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+
+
+

@@ -1,0 +1,492 @@
+---
+title: ""
+author: "Giorgio Arcara"
+date: ""
+format:
+  beamer:
+    theme: metropolis
+    keep-tex: true
+    pdf-engine: xelatex
+incremental: false
+header-includes: |
+  \setbeamerfont{title}{size=\large}
+  \usepackage{hyperref}
+  \setbeamertemplate{footline}[frame number]
+  \usepackage{tikz}
+  \usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, backgrounds, calc}
+  \usepackage{booktabs}
+  \usepackage{xcolor}
+  \definecolor{mblue}{RGB}{35,55,100}
+---
+
+::: {.content-visible when-format="beamer"}
+```{=latex}
+\title{Metodologia della Ricerca Clinica\\
+\vspace{0.5em}
+{\normalsize \textbf{SEZIONE 3 --- Inferenza Causale}}}
+\author{Giorgio Arcara,\\ Università di Padova \\ IRCCS San Camillo, Venezia}
+\titlegraphic{
+\vspace*{7cm}
+\includegraphics[scale=0.15]{Figures/LogoSanCamilloIRCCS_Unipd_alpha.png}
+\hfill \includegraphics[scale=0.15]{Figures/CC_license_3_0.png}
+}
+\maketitle
+```
+:::
+
+# 3.1 Correlazione vs Causalità
+
+## Il Problema Fondamentale
+
+\small
+
+La ricerca clinica osservazionale produce associazioni statistiche. Ma un'associazione è sufficiente per fondare un intervento terapeutico?
+
+\vspace{0.4em}
+
+**Esempio classico**: gelati e annegamenti sono correlati. La correlazione è reale (entrambi aumentano d'estate), ma i gelati non causano gli annegamenti.
+
+\vspace{0.4em}
+
+**Esempio neuropsicologico**: le persone con Alzheimer hanno livelli più bassi di acetilcolina. Questo significa che aumentare l'acetilcolina migliora la cognizione? (Risposta parziale: sì, ma con effetti modesti — la causalità era più complessa).
+
+\vspace{0.4em}
+
+**Criterio di Bradford Hill** (1965): 9 criteri per valutare l'evidenza di causalità (forza, consistenza, specificità, temporalità, dose-risposta, plausibilità biologica, coerenza, esperimento, analogia).
+
+\vspace{0.2em}
+\tiny Bradford Hill (1965). The environment and disease: association or causation? \emph{Proc R Soc Med} 58:295--300. Open Access: \url{https://doi.org/10.1177/003591576505800503}
+
+## Il Problema Fondamentale dell'Inferenza Causale
+
+\small
+
+Il **Fundamental Problem of Causal Inference** (Holland, 1986): non possiamo mai osservare entrambi i **counterfactuals** per lo stesso individuo nello stesso momento.
+
+\vspace{0.4em}
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw,rounded corners,fill=mblue!20,text width=3.8cm,
+              align=center,font=\footnotesize,minimum height=1cm},
+  arr/.style={-{Stealth},mblue,thick}
+]
+\node[box] (paz) at (0,2.5) {Paziente con MCI};
+\node[box] (t1)  at (-2.8,0.8) {Riceve training\\cognitivo};
+\node[box] (t0)  at ( 2.8,0.8) {Non riceve\\training cognitivo};
+\node[box] (y1)  at (-2.8,-0.6) {Outcome $Y^{(1)}$\\(osservato)};
+\node[box] (y0)  at ( 2.8,-0.6) {Outcome $Y^{(0)}$\\(\textbf{controffattuale})};
+\draw[arr] (paz)--(t1); \draw[arr] (paz)--(t0);
+\draw[arr] (t1)--(y1);  \draw[arr] (t0)--(y0);
+\node[font=\tiny,red!70] at (2.8,-1.4) {Non osservabile!};
+\end{tikzpicture}
+\end{center}
+```
+
+\small L'effetto causale individuale = $Y^{(1)} - Y^{(0)}$. Ma osserviamo solo uno dei due. La randomizzazione risolve il problema \emph{in media} tra i gruppi.
+
+# 3.2 DAG: Directed Acyclic Graphs
+
+## Cos'è un DAG?
+
+\small
+
+Un **DAG** (Grafo Aciclico Diretto) è uno strumento per rappresentare esplicitamente le **assunzioni causali** su un sistema. Ogni freccia rappresenta un'ipotesi di relazione causale diretta.
+
+\vspace{0.3em}
+
+**Componenti**:
+\footnotesize
+- **Nodi**: variabili (osservate o latenti)
+- **Frecce**: relazioni causali dirette
+- **Aciclico**: non ci sono cicli (A $\to$ B $\to$ A)
+
+\vspace{0.3em}
+**A cosa serve**:
+\begin{itemize}\footnotesize
+\item Identificare quali variabili controllare (e quali \emph{non} controllare)
+\item Identificare confounders, mediatori, colliders
+\item Valutare se un effetto causale è identificabile dai dati disponibili
+\end{itemize}
+
+\vspace{0.2em}
+\tiny Textor et al.\ (2016). Robust causal reasoning using DAGs. \emph{Int J Epidemiol}.\\
+Strumento online: DAGitty --- Open Access: \url{https://www.dagitty.net}
+
+
+## Strutture Fondamentali nei DAG
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  node/.style={circle,draw,fill=mblue!20,font=\footnotesize,
+               minimum size=0.65cm,inner sep=1pt},
+  arr/.style={-{Stealth},mblue,thick}
+]
+% Chain (mediator)
+\node[font=\small\bfseries] at (-4,3.5) {Catena (Mediatore)};
+\node[node] (A1) at (-5,2.5) {A};
+\node[node] (M)  at (-4,2.5) {M};
+\node[node] (B1) at (-3,2.5) {B};
+\draw[arr] (A1)--(M); \draw[arr] (M)--(B1);
+\node[font=\tiny] at (-4,1.9) {A $\to$ M $\to$ B};
+
+% Fork (confounder)
+\node[font=\small\bfseries] at (0,3.5) {Fork (Confounder)};
+\node[node] (C)  at (0,2.8) {C};
+\node[node] (A2) at (-1,2.0) {A};
+\node[node] (B2) at (1,2.0)  {B};
+\draw[arr] (C)--(A2); \draw[arr] (C)--(B2);
+\node[font=\tiny,align=center] at (0,1.4) {C causa sia A che B\\(associazione spuria A--B)};
+
+% Collider
+\node[font=\small\bfseries] at (4,3.5) {Collider};
+\node[node] (A3) at (3,2.8) {A};
+\node[node] (B3) at (5,2.8) {B};
+\node[node] (K)  at (4,2.0) {K};
+\draw[arr] (A3)--(K); \draw[arr] (B3)--(K);
+\node[font=\tiny,align=center] at (4,1.4) {A e B entrambi causano K\\(indipendenti, ma condiz.\ su K:\\associazione spurio!)};
+\end{tikzpicture}
+\end{center}
+```
+
+## Confounder: Esempio Neuropsicologico
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  node/.style={circle,draw,fill=mblue!20,font=\footnotesize,
+               minimum size=1.2cm,inner sep=2pt,align=center},
+  obs/.style={circle,draw,fill=mblue!50,text=white,font=\footnotesize,
+              minimum size=1.2cm,inner sep=2pt,align=center},
+  arr/.style={-{Stealth},mblue,thick},
+  spurious/.style={-{Stealth},red!60,dashed,thick}
+]
+\node[obs] (eta)  at (0,3)   {Età};
+\node[obs] (dep)  at (-2.5,1) {Depressione};
+\node[obs] (cog)  at ( 2.5,1) {Performance\\cognitiva};
+\draw[arr]     (eta)--(dep);
+\draw[arr]     (eta)--(cog);
+\draw[spurious](dep)--(cog)
+  node[midway,below,font=\tiny,red!70]{Associazione spuria?};
+\end{tikzpicture}
+\end{center}
+\vspace{-0.3em}
+```
+
+\small L'età causa sia la depressione che il declino cognitivo. Se non controlliamo per l'età, troviamo un'associazione depressione--cognizione che potrebbe essere \textbf{totalmente} o \textbf{parzialmente} spuria.
+
+\vspace{0.3em}
+\textbf{Soluzione}: aggiungere l'età come covariata nella regressione --- o meglio, costruire il DAG \emph{prima} di analizzare i dati.
+
+## Collider: Un Errore Sottile
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  node/.style={circle,draw,fill=mblue!20,font=\footnotesize,
+               minimum size=1.2cm,inner sep=2pt,align=center},
+  arr/.style={-{Stealth},mblue,thick},
+  spurious/.style={-{Stealth},red!60,dashed,very thick}
+]
+\node[node] (gen) at (-2.5,2) {Fattori\\genetici\\(APOE)};
+\node[node] (tbi) at ( 2.5,2) {Trauma\\cranico\\(TBI)};
+\node[node] (ad)  at (0,0.5)  {Diagnosi\\di AD};
+\draw[arr] (gen)--(ad);
+\draw[arr] (tbi)--(ad);
+\draw[spurious] (gen) to[bend left=25] node[above,font=\tiny,red!70, align=center]{Associazione negativa\\(collider bias!)} (tbi);
+\end{tikzpicture}
+\end{center}
+\vspace{-0.3em}
+```
+
+\small In un campione clinico (selezionato per avere AD), APOE e TBI diventano **negativamente correlati** anche se nella popolazione generale sono indipendenti. \textbf{Condizionare su un collider apre un percorso spurio}.
+
+\vspace{0.2em}
+\footnotesize \textbf{Implicazione pratica}: studi condotti solo su pazienti ospedalizzati o con una specifica diagnosi possono soffrire di collider bias (noto anche come \emph{Berkson's bias}).
+
+## Mediatore: Non Sempre va Controllato
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  node/.style={circle,draw,fill=mblue!20,font=\footnotesize,
+               minimum size=1.2cm,inner sep=2pt,align=center},
+  arr/.style={-{Stealth},mblue,thick}
+]
+\node[node] (dep)  at (-2.5,1.5) {Depressione};
+\node[node] (som)  at (0,1.5)    {Sonnolenza\\diurna};
+\node[node] (att)  at (2.5,1.5)  {Attenzione\\(peggiorata)};
+\draw[arr] (dep)--(som);
+\draw[arr] (som)--(att);
+\draw[arr] (dep) to[bend right=30] (att);
+\node[font=\tiny,mblue] at (0,0.3) {Percorso diretto + indiretto (mediato)};
+\end{tikzpicture}
+\end{center}
+\vspace{-0.3em}
+```
+
+\small Se vogliamo stimare l'effetto **totale** della depressione sull'attenzione, \textbf{non dobbiamo} controllare per la sonnolenza (che è un mediatore). Farlo bloccherebbe parte dell'effetto causale.
+
+\vspace{0.3em}
+\footnotesize \textbf{Effetto diretto vs indiretto}: l'analisi della mediazione (es.\ tramite SEM o pacchetti come \texttt{mediation} in R) permette di decomporre l'effetto totale.
+
+
+
+# 3.3 Metodi per l'Inferenza Causale da Dati Osservazionali
+
+## Propensity Score
+
+\small
+
+Il **propensity score** (Rosenbaum \& Rubin, 1983) è la probabilità che un soggetto riceva il trattamento, condizionatamente alle sue caratteristiche osservate.
+
+$$PS_i = P(\text{Trattamento}_i = 1 \mid X_i)$$
+
+dove $X_i$ è il vettore di covariate osservate.
+
+\vspace{0.4em}
+
+**Intuizione**: soggetti con lo stesso propensity score sono "quasi-randomizzati" rispetto alle covariate osservate.
+
+\vspace{0.4em}
+
+**Metodi di utilizzo**:
+\begin{itemize}\footnotesize
+\item \textbf{Matching}: abbinare trattati e controlli con PS simile
+\item \textbf{Stratificazione}: dividere in quintili di PS
+\item \textbf{Weighting} (IPW): pesi inversamente proporzionali al PS
+\item \textbf{Covariata}: includere il PS come covariata nella regressione
+\end{itemize}
+
+
+
+## Propensity Score: Esempio Neuropsicologico
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw,rounded corners,fill=mblue!15,text width=3.5cm,
+              align=center,font=\footnotesize,minimum height=0.9cm},
+  arr/.style={-{Stealth},mblue,thick}
+]
+\node[box] (cov) at (0,3.5)  {Covariate:\\età, scolarità,\\comorbidità, MMSE};
+\node[box] (ps)  at (0,2.2)  {Stima PS:\\logistica / random forest};
+\node[box] (mat) at (0,1.0)  {Matching o\\IPW weighting};
+\node[box] (out) at (0,-0.2) {Stima effetto\\causale del trattamento};
+\draw[arr] (cov)--(ps); \draw[arr] (ps)--(mat); \draw[arr] (mat)--(out);
+\node[right,font=\tiny,text width=3.5cm, align=center] at (2.0,3.5) {Es.\ pazienti che\\ hanno scelto\\il training vs no};
+\node[right,font=\tiny,text width=3.5cm, align=center] at (2.0,1.0) {Bilancia le\\caratteristiche\\ pre-trattamento};
+\end{tikzpicture}
+\end{center}
+```
+
+\small \textbf{Assunzione chiave (non verificabile!)}: \emph{no unmeasured confounders} --- tutte le variabili che influenzano sia la selezione al trattamento che l'outcome sono state misurate e incluse nel PS.
+
+## Limiti del Propensity Score
+
+\small
+
+**Assunzione di positività**: ogni soggetto deve avere probabilità $> 0$ di ricevere ciascun trattamento. Se alcuni soggetti hanno PS $= 0$ o $= 1$, il confronto non è possibile.
+
+\vspace{0.3em}
+
+**No unmeasured confounders**: il PS bilancia le covariate osservate, ma non quelle latenti o non misurate (es.\ motivazione del paziente, supporto familiare non rilevato).
+
+\vspace{0.3em}
+
+**Overlap insufficiente**: se trattati e controlli sono molto diversi, il matching non trova coppie adeguate e la stima è poco affidabile.
+
+\vspace{0.3em}
+
+**Non è un RCT**: il PS riduce il bias da confounding osservato, ma non lo elimina completamente. Va sempre affiancato a un'analisi di sensitività.
+
+\vspace{0.2em}
+\tiny Austin (2011). An introduction to propensity score methods. \emph{Multivariate Behav Res} 46(3). Open Access: \url{https://doi.org/10.1080/00273171.2011.568786}
+
+
+## Altri Approcci all'Inferenza Causale
+
+\small
+
+**Instrumental Variables (IV)**
+
+Una variabile strumentale $Z$ influenza il trattamento ma non l'outcome se non attraverso il trattamento. Permette di stimare effetti causali anche in presenza di confounders non osservati.
+
+\emph{Esempio}: variazioni geografiche nell'accesso a servizi di neuroriabilitazione come strumento.
+
+\vspace{0.3em}
+
+**Difference-in-Differences (DiD)**
+
+Confronta il cambiamento nel tempo tra un gruppo esposto e uno non esposto, controllando per trend pre-esistenti.
+
+\vspace{0.3em}
+
+**Sensitivity Analysis**
+
+Analisi di E-value (VanderWeele \& Ding, 2017): quantifica quanto forte dovrebbe essere un confounder non misurato per spiegare l'associazione osservata.
+
+\vspace{0.2em}
+\tiny VanderWeele \& Ding (2017). Sensitivity analysis in observational research: introducing the E-value. \emph{Ann Intern Med}. Open Access: \url{https://doi.org/10.7326/M16-2607}
+
+# 3.4 Framework Teorici
+
+## Potential Outcomes Framework (Rubin)
+
+\small
+
+Il framework dei **potential outcomes** (Rubin, 1974; Holland, 1986) formalizza la causalità tramite variabili controffattuali.
+
+\vspace{0.3em}
+
+Per ogni soggetto $i$ e trattamento $t \in \{0,1\}$:
+$$Y_i^{(t)} = \text{outcome che si osserverebbe se il soggetto ricevesse il trattamento } t$$
+
+**Effetto causale individuale**: $\tau_i = Y_i^{(1)} - Y_i^{(0)}$
+
+**Average Treatment Effect (ATE)**: $\tau = E[Y^{(1)} - Y^{(0)}]$
+
+**ATE nei trattati (ATT)**: $\tau_{ATT} = E[Y^{(1)} - Y^{(0)} \mid T=1]$
+
+\vspace{0.3em}
+\small La randomizzazione garantisce che $E[Y^{(0)} \mid T=1] = E[Y^{(0)} \mid T=0]$ (exchangeability), rendendo identificabile il controffattuale.
+
+## Do-Calculus e Framework di Pearl
+
+\small
+
+Judea Pearl ha sviluppato un framework alternativo basato sui DAG e sul **do-calculus** per rispondere a domande causali.
+
+\vspace{0.3em}
+
+**Differenza fondamentale**:
+\begin{itemize}\footnotesize
+\item $P(Y \mid X=x)$: probabilità osservata di $Y$ dato che osserviamo $X=x$ (statistica)
+\item $P(Y \mid do(X=x))$: probabilità di $Y$ se \emph{interveniamo} impostando $X=x$ (causale)
+\end{itemize}
+
+\vspace{0.3em}
+
+**Backdoor criterion**: un insieme di variabili $Z$ blocca tutti i percorsi "backdoor" tra trattamento e outcome $\Rightarrow$ controllando per $Z$ si ottiene una stima causale.
+
+\vspace{0.3em}
+
+**Strumento pratico**: **DAGitty** (\url{www.dagitty.net}) permette di disegnare DAG online e identificare automaticamente il minimal adjustment set.
+
+\vspace{0.2em}
+\tiny Pearl (2009). \emph{Causality}. Cambridge University Press.\\
+Gratis: Pearl et al.\ (2016). \emph{Causal Inference in Statistics: A Primer}. Wiley. Capitoli disponibili Open Access: \url{http://bayes.cs.ucla.edu/PRIMER/}
+
+
+## Backdoor Criterion: Esempio
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  node/.style={circle,draw,fill=mblue!20,font=\footnotesize,
+               minimum size=1.1cm,inner sep=1pt,align=center},
+  blocked/.style={circle,draw,fill=mblue!50,text=white,font=\footnotesize,
+                  minimum size=1.1cm,inner sep=1pt,align=center},
+  arr/.style={-{Stealth},mblue,thick},
+  back/.style={-{Stealth},red!50,dashed,thick}
+]
+\node[node]    (eta) at (0,3.5)   {Età};
+\node[node]    (dep) at (-2.5,2)  {Depressione\\(Trattamento)};
+\node[blocked] (cog) at (2.5,2)   {Cognizione\\(Outcome)};
+\node[node]    (att) at (0,0.5)   {Atrofia\\ippocampale};
+
+\draw[arr] (dep)--(cog) node[midway,above,font=\tiny]{?};
+\draw[arr] (dep)--(att);
+\draw[arr] (att)--(cog);
+\draw[back] (eta)--(dep);
+\draw[back] (eta)--(cog);
+\draw[back] (dep) to[bend left=15] node[above,font=\tiny,red!60]{Backdoor path via età} (eta);
+
+\node[font=\scriptsize,red!70,text width=4cm] at (0,-0.5)
+  {Bloccare l'età chiude il backdoor path e permette la stima causale depressione $\to$ cognizione};
+\end{tikzpicture}
+\end{center}
+```
+
+## Confusion Index: Riepilogo delle Strutture
+
+```{=latex}
+\begin{center}
+\begin{tabular}{>{\footnotesize}l >{\footnotesize}l >{\footnotesize}p{4cm}}
+\toprule
+\textbf{Struttura} & \textbf{Controllare?} & \textbf{Effetto se si controlla} \\
+\midrule
+Confounder (fork)  & \textbf{Sì}  & Rimuove associazione spuria \\
+Mediatore (chain)  & \textbf{No}  & Blocca parte dell'effetto causale \\
+Collider           & \textbf{No}  & Apre un percorso spurio \\
+\midrule
+\multicolumn{3}{l}{\footnotesize \emph{NB: la scelta dipende dalla domanda causale, non dalla significatività statistica}} \\
+\bottomrule
+\end{tabular}
+\end{center}
+\vspace{0.5em}
+\small Questa tabella è il nucleo pratico del corso: in psicologia e neuropsicologia, inserire variabili di controllo ``perché correlate'' senza un DAG può produrre stime peggiori di quelle senza alcun controllo.
+```
+
+---
+
+# Riepilogo Sezione 3
+
+## Riepilogo: Dalla Correlazione alla Causalità
+
+```{=latex}
+\begin{center}
+\begin{tikzpicture}[
+  box/.style={draw,rounded corners,fill=mblue!20,text width=3.4cm,
+              align=center,font=\footnotesize,minimum height=0.85cm},
+  arr/.style={-{Stealth},mblue,thick}
+]
+\node[box] (q)  at (0,4.2) {Domanda causale\\(non solo associativa)};
+\node[box] (dag) at (0,3.0) {DAG: rappresentare\\le assunzioni causali};
+\node[box] (id) at (0,1.8)  {Identificazione:\\backdoor criterion\\adjustment set};
+\node[box] (est) at (0,0.6) {Stima:\\PS matching, IPW,\\IV, DiD, RD};
+\node[box] (sen) at (0,-0.6){Sensitivity analysis:\\E-value, RD bounds};
+\draw[arr] (q)--(dag); \draw[arr] (dag)--(id);
+\draw[arr] (id)--(est); \draw[arr] (est)--(sen);
+\end{tikzpicture}
+\end{center}
+```
+
+## Strumenti Pratici Open Access — Sezione 3
+
+\small
+
+\begin{itemize}\footnotesize
+
+\item \textbf{DAGitty} (DAG online, gratuito):\\
+  \url{https://www.dagitty.net}
+
+\item \textbf{Causal Inference in Statistics: A Primer} (Pearl et al.):
+  Capitoli selezionati Open Access:\\
+  \url{http://bayes.cs.ucla.edu/PRIMER/}
+
+\item \textbf{The Effect: An Introduction to Research Design and Causality}\\
+  (Huntington-Klein, 2022). Intero libro Open Access:\\
+  \url{https://theeffectbook.net}
+
+\item \textbf{Causal Inference: The Mixtape} (Cunningham, 2021).\\
+  Open Access: \url{https://mixtape.scunning.com}
+
+\item \textbf{Propensity Score}: Austin (2011). \emph{Multivariate Behav Res}.\\
+  \url{https://doi.org/10.1080/00273171.2011.568786}
+
+\item \textbf{E-value}: VanderWeele \& Ding (2017). \emph{Ann Intern Med}.\\
+  \url{https://doi.org/10.7326/M16-2607}
+
+\item \textbf{Bradford Hill criteria}: Hill (1965). \emph{Proc R Soc Med}.\\
+  \url{https://doi.org/10.1177/003591576505800503}
+
+\item \textbf{Pacchetto R \texttt{MatchIt}} (PS matching):
+  Ho et al., Open Access:\\
+  \url{https://doi.org/10.18637/jss.v042.i08}
+
+\end{itemize}
+
+-->

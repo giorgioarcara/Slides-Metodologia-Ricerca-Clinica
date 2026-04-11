@@ -1,0 +1,75 @@
+---
+title: ""
+author: "Giorgio Arcara"
+date: ""
+format:
+  beamer:
+    theme: metropolis
+    keep-tex: true
+incremental: false
+header-includes:
+  \setbeamerfont{title}{size=\large}
+  \usepackage{hyperref}
+  \setbeamertemplate{footline}[frame number]
+
+---
+
+```{=latex}
+% TITLE SLIDES
+\title{Metodologia della Ricerca Clinica\\ \vspace{1em} \emph{C. Attività}}
+\author{Giorgio Arcara,\\ Università di Padova \\ IRCCS San Camillo, Venezia}
+
+\titlegraphic{
+
+\vspace*{7cm}
+\includegraphics[scale=0.15]{Figures/LogoSanCamilloIRCCS_Unipd_alpha.png}
+\begin{center}
+\vspace{-2.2em}
+\includegraphics[scale=0.15]{Figures/CC_license_3_0.png}
+\end{center}
+}
+\date{\today}
+\maketitle
+```
+
+
+## Evidence Based Clinical Practice
+```{=latex}
+\begin{center}
+{\Large \textbf{Per quali aspetti della pratica clinica servono evidenze?}}
+
+\includegraphics[width=0.3\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+
+## Come una persona che si occupa di clinica può contribuire alla raccolta di evidenze?
+
+```{=latex}
+\begin{center}
+\includegraphics[width=0.4\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+
+## Analizziamo insieme uno studio RCT
+
+
+## Quali sono i principali limiti di un RCT parallel arms?
+
+```{=latex}
+\begin{center}
+\includegraphics[width=0.4\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+## Quali sono i problemi/limiti di una review sistematica e di una meta-analisi.
+
+```{=latex}
+\begin{center}
+\includegraphics[width=0.4\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+## Analizziamo insieme una review/meta analysis
+

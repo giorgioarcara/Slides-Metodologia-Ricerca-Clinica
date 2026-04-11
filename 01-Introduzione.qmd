@@ -1,0 +1,152 @@
+---
+title: ""
+author: "Giorgio Arcara"
+date: ""
+format:
+  beamer:
+    theme: metropolis
+    keep-tex: true
+incremental: false
+header-includes:
+  \setbeamerfont{title}{size=\large}
+  \usepackage{hyperref}
+  \setbeamertemplate{footline}[frame number]
+
+---
+
+```{=latex}
+% TITLE SLIDES
+\title{Metodologia della Ricerca Clinica\\ \vspace{1em} \emph{1. Introduzione}}
+\author{Giorgio Arcara,\\ Università di Padova \\ IRCCS San Camillo, Venezia}
+
+\titlegraphic{
+
+\vspace*{7cm}
+\includegraphics[scale=0.15]{Figures/LogoSanCamilloIRCCS_Unipd_alpha.png}
+\begin{center}
+\vspace{-2.2em}
+\includegraphics[scale=0.15]{Figures/CC_license_3_0.png}
+\end{center}
+}
+\date{\today}
+\maketitle
+```
+
+## Lezione di oggi
+
+-   Presentazione del docente e del corso.
+-   Aspetti organizzativi del corso.
+-   Obiettivi formativi e "spirito" del corso.
+
+
+## CV Giorgio Arcara
+
+\footnotesize
+
+-   Laurea in Psicologia presso Unipd (2005)
+
+-   Master in Neuropsicologia dei disturbi cognitivi acquisiti (2006)
+
+-   Vari post-doc presso dipartimenti (psicologia, ingegneria, neuroscienze) <br>
+
+-   Dal 2016 Ricercatore presso IRCCS San Camillo di Venezia.
+
+-   Dal 2025 Professore Associato in Psicometria - Università di Padova.
+
+\pause
+![](Figures/GEMS.png){width="60%" fig-align="right"}
+
+## Contatti e riferimenti
+\centering
+
+[[https://giorgioarcara.github.io]{.underline}](https://giorgioarcara.github.io)
+
+[[pagina personale unipd]{.underline}](https://www.dpg.unipd.it/category/ruoli/personale-docente?key=4D0707A2DD6FCCD50B90E4C9F316A625)
+
+[giorgio.arcara\@unipd.it](mailto:giorgio.arcara@unipd.it){.underline}
+
+
+## Aspetti organizzativi - Materiali
+
+**Condividerò tutto il materiale utilizzato e mostrato**
+
+```{=latex}
+I materiali principali sono le slides e materiali aggiuntivi che vi saranno forniti durante il corso. I materiali li troverete anche nella pagina moodle.
+```
+
+
+## Aspetti organizzativi - Materiali
+
+```{=latex}
+\begin{columns}
+\column{0.5\textwidth}
+\small
+\emph{Mondini, S., Cappelletti, M., \& Arcara, G. (2022). Methodology in Neuropsychological Assessment: An Interpretative Approach to Guide Clinical Practice. Taylor \& Francis.}\\
+\vspace{1em}
+Testo di approfondimento, \textbf{non indispensabile}.
+
+\column{0.5\textwidth}
+
+\begin{figure}
+\includegraphics[scale=0.5]{Figures/Methodology_book.png}
+\end{figure}
+
+\end{columns}
+```
+## Aspetti organizzativi - Materiali aggiuntivi
+
+-   Libro gratuito su statistica base ed R \href{https://learningstatisticswithr.com/}{\underline{https://learningstatisticswithr.com/}}
+
+-   Libro gratuito su psicometria (più avanzato) 
+\href{https://personality-project.org/r/book/}{\underline{https://personality-project.org/r/book/}}
+
+-   Libro in corso di scrittura
+\href{https://giorgioarcara.github.io/oip-book/}{\underline{https://giorgioarcara.github.io/oip-book/}}
+
+## Qualche domanda
+
+_Chi tra di voi pensa che principalmente svolgerà attività clinica?_ \pause
+
+_Chi tra di voi pensa che principalmente si occuperà di ricerca?_ \pause
+
+_Chi tra di voi pensa che nella pratica clinica utilizzerà test?_
+
+## L'approccio
+\centering
+
+**Learning-by-doing**
+
+**Active-learning**
+
+## Clinica e ricerca
+\begin{center}
+\includegraphics[height=7cm]{Figures/Separazione.png}
+\end{center}
+
+
+## Obiettivi del corso
+
+- Spiegare come utilizzare i test in clinica \pause
+- Spiegare i limiti dell'utilizzo dei test \pause
+- Spiegare fondamenti di ricerca clinica (per chi fa clinica)
+
+## Un passo indietro per riflettere
+
+\begin{center}
+\includegraphics[height=8cm]{Figures/Stepping_back.png}
+\end{center}
+
+## Utilizzo critico di LLM (es. ChatGPT) per il corso 1/2
+
+I Large Language Models (LLM) come ChatGPT, comunemente chiamati sistemi di intelligenza artificiale sono una grande opportunità di innovazione tecnologica che merita di essere discussa. Di seguito alcune raccomandazioni per un utilizzo appropriato per il corso.
+
+
+## Utilizzo critico di LLM (es. ChatGPT) per il corso 2/2
+
+- Non cercate risposte, ma cercate _una guida_ per trovare informazioni. Gli LLM funzionano come motori di ricerca avanzati soprattutto se la domanda è vaga.
+
+- Utilizzatele per capire meglio alcuni concetti. Se qualcosa non è chiaro, potete esplicitamente chiedere di spiegarlo in altri termini o con altri esempi.
+
+- **Non vi fidate ciecamente di ciò che dicono** ma cercate conferma da eventuali fonti. Gli LLM spesso mostrano dei comportamenti detti _hallucinations_ danno risposte verosimili o credibili ma che si rivelano sbagliate o completamente inventate.
+
+
