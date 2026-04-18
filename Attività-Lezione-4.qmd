@@ -1,0 +1,73 @@
+---
+title: ""
+author: "Giorgio Arcara"
+date: ""
+format:
+  beamer:
+    theme: metropolis
+    keep-tex: true
+incremental: false
+header-includes:
+  \setbeamerfont{title}{size=\large}
+  \usepackage{hyperref}
+  \setbeamertemplate{footline}[frame number]
+
+---
+
+```{=latex}
+% TITLE SLIDES
+\title{Metodologia della Ricerca Clinica\\ \vspace{1em} \emph{D. Attività}}
+\author{Giorgio Arcara,\\ Università di Padova \\ IRCCS San Camillo, Venezia}
+
+\titlegraphic{
+
+\vspace*{7cm}
+\includegraphics[scale=0.15]{Figures/LogoSanCamilloIRCCS_Unipd_alpha.png}
+\begin{center}
+\vspace{-2.2em}
+\includegraphics[scale=0.15]{Figures/CC_license_3_0.png}
+\end{center}
+}
+\date{\today}
+\maketitle
+```
+
+## Uno studio sulla Riserva Cognitiva
+
+Uno studio ha seguito per 10 anni una coorte di persone con diversa Riserva Cognitiva di età maggiore di 65 anni. Controllando per età e stato-economico, risulta che le persone con più alta riserva cognitiva erano a minor rischio di avere Ictus.
+
+Gli autori concludono che l'allenamento cognitivo e una ricca vita possono proteggere dal rischio di Ictus.
+
+
+## Uno studio sulla Riserva Cognitiva
+
+
+```{=latex}
+\begin{center}
+{\Large \textbf{In uno studio come quello appena mostrato, potete immaginare spiegazioni alternative dei risultati?}}
+
+\includegraphics[width=0.3\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+## Consideriamo una spiegazione alternativa
+
+
+```{=latex}
+\begin{center}
+{\Large \textbf{Come escludereste questa spiegazione?}}
+\end{center}
+```
+
+
+## Quali sono i principali limiti delle evidenze da Meta-analisi?
+```{=latex}
+\begin{center}
+{\Large \textbf{Per quali aspetti della pratica clinica servono evidenze?}}
+
+\includegraphics[width=0.3\linewidth]{Figures/Padlet_properties_qr_code.png}
+\end{center}
+```
+
+
+

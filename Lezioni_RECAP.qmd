@@ -1,0 +1,144 @@
+---
+title: ""
+author: "Giorgio Arcara"
+date: ""
+format:
+  beamer:
+    theme: metropolis
+    keep-tex: true
+    pdf-engine: xelatex
+incremental: false
+header-includes: |
+  \setbeamerfont{title}{size=\large}
+  \usepackage{hyperref}
+  \setbeamertemplate{footline}[frame number]
+  \usepackage{tikz}
+  \usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, backgrounds, calc}
+  \usepackage{booktabs}
+  \usepackage{xcolor}
+  \definecolor{mblue}{RGB}{35,55,100}
+---
+
+::: {.content-visible when-format="beamer"}
+```{=latex}
+\title{Metodologia della Ricerca Clinica\\
+\vspace{0.5em}
+{\normalsize \textbf{Recap}}}
+\author{Giorgio Arcara,\\ Università di Padova \\ IRCCS San Camillo, Venezia}
+\titlegraphic{
+\vspace*{7cm}
+\includegraphics[scale=0.15]{Figures/LogoSanCamilloIRCCS_Unipd_alpha.png}
+\hfill \includegraphics[scale=0.15]{Figures/CC_license_3_0.png}
+}
+\maketitle
+```
+:::
+
+## 1) Test e psicometria 
+
+Per una pratica psicologica/neuropsicologica evidence based è essenziale avere  **misurazioni**.
+
+I **test** sono gli strumenti di misurazione psicologica. Misurazione e test sono oggetti di studio della **psicometria**.
+
+Nell'utilizzare nella pratica clinica i test abbiamo un problema particolare: fare inferenze a livello di **caso singolo**, che richiedono attenzioni particolari.
+
+## Psicometria applicata
+
+Le conoscenze di **psicometria applicata** entrano in gioco essenzialmente in due momenti:
+
+- quando scegliamo i test da utilizzare
+
+- quando interpretiamo i risultati dei test
+
+
+## Proprietà psicometriche dei test
+
+Alcune considerazioni importanti sono:
+
+```{=latex}
+\begin{itemize}
+\item Considerate \textbf{tutte le proprietà psicometriche di un test}
+
+\begin{itemize}
+  \item validità 
+  \item affidabilità
+  \item dati normativi
+  \item cambiamento nel tempo
+  \item \ldots
+\end{itemize}
+
+\item nella trasformazione di punteggi in percentili (ed eventuale confronto con soglie) ricordate che rispondono alla domanda:
+
+\begin{itemize}
+\item Quanto è "strano" osservare questa performance nel mio campione/popolazione normativa?
+\end{itemize}
+
+\end{itemize}
+
+```
+
+## Psicometria ed evidenze scientifiche
+
+![](Figures/triangle){width="10%"}. In generale ricordatevi che un **test** $\nRightarrow$ **costrutto**.
+
+**Dipende dalla validità del test!** (che potrebbe anche cambiare es. con danni cognitivi)
+
+## Studi scientifici 
+
+Per una pratica psicologica/neuropsicologica evidence based è essenziale basarsi sui risultati di studi scientifici.
+
+La natura delle evidenze può essere **correlazionale** (tutti gli studi osservazionali e alcuni interventistici) o **causale** (trial clinici randomizzati).
+
+## Studi sperimentali e trial
+
+I **trial clinici**, anche se sono il metodo principe per efficacia di un trattamento, *non sono privi di limiti*.
+
+In psicologia clinica e neuropsicologia clinica questo dipende principalmente da:
+
+- bias nella selezione.
+- difficoltà nell'avere un gruppo di controllo appropriato.
+- difficoltà nell'avere un _double-blind_.
+
+
+## Studi osservazionali
+
+Gli studi osservazionali danno informazioni importante, ma è sempre dietro l'angolo il rischio di fare interpretazioni causali, _specie quando queste sono verosimili_.
+
+Questo però non esclude la possibilità di spiegazioni alternative.
+
+## Problemi studi osservazionali 
+
+Negli studi osservazionali c'è spesso la tendenza a pensare che la cosa ideale sia "controllare" per covariate o inserire variabili nel modello per isolare un predittore. Questo può però creare addirittura errori, se non si consiedano certi effetti (es. **colliders**)
+
+## Sintesi di Evidenze
+
+Anche nella sintesi di evidenze attenzione a 
+
+"garbage in" $\to$ "garbage out"
+
+## \small Come può contribuire il personale clinico alla ricerca? (2/2)
+\small
+- Ricordando che per contribuire alla ricerca **non è necessario essere ricercatori a tempo pieno**: anche chi lavora prevalentemente in ambito clinico può avere un ruolo decisivo nel migliorare la qualità delle conoscenze disponibili.
+
+- Collaborando attivamente con i ricercatori, non solo come semplice “fornitore di dati”, ma **contribuendo a definire e affinare la domanda di ricerca** a partire dai bisogni reali osservati nella pratica clinica.
+
+- **Aiutando a individuare quali problemi siano davvero rilevanti per i pazienti e per il lavoro quotidiano**, evitando studi che rispondano a domande poco utili o lontane dalla realtà clinica.
+
+- **Partecipando alla raccolta di dati di qualità**, accurati e standardizzati, elemento fondamentale per produrre risultati affidabili. 
+
+## \small Come può contribuire il personale clinico alla ricerca? (2/2)
+\small
+- Contribuendo all’ **interpretazione dei risultati**, perché il punto di vista clinico è essenziale per capire se un risultato statisticamente significativo abbia anche un reale valore pratico.
+
+- Favorendo la collaborazione tra reparti, centri e professionisti diversi, così da costruire dataset più ampi e rappresentativi.
+
+- **Privilegiando progetti multicentrici, grandi database clinici** (possibilmente aperti e condivisibili) e trial ben disegnati, piuttosto che piccoli studi isolati che rischiano di produrre risultati fragili o poco utili.
+
+- **Promuovendo una cultura della valutazione critica delle evidenze**, aiutando colleghi e pazienti a interpretare i risultati della ricerca con prudenza e **consapevolezza**.
+
+
+
+
+
+
+

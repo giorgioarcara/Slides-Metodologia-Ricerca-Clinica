@@ -44,7 +44,7 @@ Testiamo un paziente tramite il test di Linguaggio Figurato 1.
 
 Il paziente ottiene un punteggio di 12. Dopo 6 mesi viene valuato nuovamente e ottiene un punteggio di 10. Cosa possiamo dire del paziente?
 
-![](Figures/Figure_true_obs_4.png){width="50%" fig-align="center"}
+![](Figures/Figure_true_obs_1.5.png){width="50%" fig-align="center"}
 
 
 \footnotesize
