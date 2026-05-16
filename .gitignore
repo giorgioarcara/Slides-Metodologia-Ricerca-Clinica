@@ -58,3 +58,11 @@ Export_Files/*
 
 # .DS_store
 .DS_Store
+
+# pdf files
+
+# Latex intermediate files
+*.aux
+*.lof
+*.log
+*.tex
