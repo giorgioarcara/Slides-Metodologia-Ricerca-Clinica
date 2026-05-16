@@ -119,6 +119,7 @@ Se analizzassimo la relazione tra X e Y, troveremmo in questi tre casi una forte
 ```
 
 ## Problemi statistici nello studiare associazioni tra variabili.
+\small
 
 - **Collinearità**: se ho due variabili molto correlate, potrei non essere in grado di distinguere l'effetto e inserirle entrambe in un modello può creare distorsioni.
 
@@ -298,8 +299,8 @@ Strumento online: DAGitty --- Open Access: \url{https://www.dagitty.net}
   arr/.style={-{Stealth},mblue,thick},
   spurious/.style={-{Stealth},red!60,dashed,very thick}
 ]
-\node[node, align=center] (gen) at (-2.5,2) {Abilità\\ Linguistiche};
-\node[node] (tbi) at ( 2.5,2) {Età};
+\node[node, align=center] (gen) at (-2.5,2) {Età};
+\node[node] (tbi) at ( 2.5,2) {Abilità\\ Linguistiche};
 \node[node] (ad)  at (0,0.5)  {Funz. Cognitivo\\ Globale};
 \draw[arr] (gen)--(ad);
 \draw[arr] (tbi)--(ad);

@@ -81,6 +81,15 @@ Nessuno studio singolo è sufficiente per fondare la pratica clinica:
 \end{itemize}
 ```
 
+## A complicare la cose
+![](Figures/triangle.png){width="20%" fig-align="center"}
+
+- Anche se un effetto è **vero** statisticamente non tutti gli studi mostreranno quell'effetto
+\pause
+
+- Anche se un effetto **non è vero**, statisticamente alcuni studi potrebbero mostrare quell'effetto.
+
+(c'entra il fatto che lavoriamo su _campioni_ estratti da _popolazioni_)
 
 ## Sintesi delle evidenze
 
@@ -490,8 +499,6 @@ Quando le evidenze sono scarse o insufficienti per linee guida basate su sistema
 \end{tikzpicture}
 \end{center}
 ```
-
-# Riepilogo Sezione 2
 
 ## Riepilogo: Dal Singolo Studio alla Pratica
 

@@ -79,7 +79,7 @@ Alcune considerazioni importanti sono:
 
 ## Psicometria ed evidenze scientifiche
 
-![](Figures/triangle){width="10%"}. In generale ricordatevi che un **test** $\nRightarrow$ **costrutto**.
+![](Figures/triangle.png){width="10%"}. In generale ricordatevi che un **test** $\nRightarrow$ **costrutto**.
 
 **Dipende dalla validità del test!** (che potrebbe anche cambiare es. con danni cognitivi)
 
@@ -134,7 +134,7 @@ Anche nella sintesi di evidenze attenzione a
 
 - **Privilegiando progetti multicentrici, grandi database clinici** (possibilmente aperti e condivisibili) e trial ben disegnati, piuttosto che piccoli studi isolati che rischiano di produrre risultati fragili o poco utili.
 
-- **Promuovendo una cultura della valutazione critica delle evidenze**, aiutando colleghi e pazienti a interpretare i risultati della ricerca con prudenza e **consapevolezza**.
+- **Promuovendo una cultura della valutazione critica delle evidenze**, aiutando colleghi e pazienti a interpretare i risultati della ricerca con prudenza.
 
 
 

@@ -63,7 +63,7 @@ Gli autori concludono che l'allenamento cognitivo e una ricca vita possono prote
 ## Quali sono i principali limiti delle evidenze da Meta-analisi?
 ```{=latex}
 \begin{center}
-{\Large \textbf{Per quali aspetti della pratica clinica servono evidenze?}}
+{\Large \textbf{Quali sono i principali limiti delle evidenze da Meta-analisi?}}
 
 \includegraphics[width=0.3\linewidth]{Figures/Padlet_properties_qr_code.png}
 \end{center}
