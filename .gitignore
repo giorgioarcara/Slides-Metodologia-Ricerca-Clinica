@@ -60,6 +60,7 @@ Export_Files/*
 .DS_Store
 
 # pdf files
+*.pdf
 
 # Latex intermediate files
 *.aux
